@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'site_title' => 'Admin',
+    'site_title' => 'CBS DIGITAL',
 ];

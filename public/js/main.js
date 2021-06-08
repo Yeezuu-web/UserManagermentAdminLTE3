@@ -37,6 +37,32 @@ $(document).ready(function () {
         next: 'fas fa-chevron-right'
       }
     })
+
+    $('.yearpicker').datetimepicker({
+      format: 'YYYY',
+      viewMode: 'years',
+      icons: {
+        up: 'fas fa-chevron-up',
+        down: 'fas fa-chevron-down',
+        previous: 'fas fa-chevron-left',
+        next: 'fas fa-chevron-right'
+      }
+    })
+
+    //Date range picker
+    $('.daterang').daterangepicker({
+      locale: {
+        format: 'DD-MM-YYYY'
+      }
+    })
+
+    $('.daterangtime').daterangepicker({
+      timePicker: true,
+      timePickerIncrement: 30,
+      locale: {
+        format: 'DD-MM-YYYY hh:mm A'
+      }
+    })
   
     $('.select-all').click(function () {
       let $select2 = $(this).parent().siblings('.select2')

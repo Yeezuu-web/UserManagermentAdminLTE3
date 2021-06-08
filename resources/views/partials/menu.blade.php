@@ -20,6 +20,17 @@
                         </p>
                     </a>
                 </li>
+                @can('file_access')
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route("admin.files.index") }}">
+                        <i class="fas fa-fw fa-folder nav-icon">
+                        </i>
+                        <p>
+                            {{ trans('global.file') }}
+                        </p>
+                    </a>
+                </li>
+                @endcan
                 @can('user_management_access')
                     <li class="nav-item has-treeview {{ request()->is("admin/permissions*") ? "menu-open" : "" }} {{ request()->is("admin/roles*") ? "menu-open" : "" }} {{ request()->is("admin/users*") ? "menu-open" : "" }}">
                         <a class="nav-link nav-dropdown-toggle" href="#">
