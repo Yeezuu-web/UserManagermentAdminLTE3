@@ -1,15 +1,21 @@
 <div class="card">
-    <div class="card-header">
+    <div class="card-header bg-gradient-primary">
         {{ trans('global.create') }} {{ trans('cruds.file.title_singular') }}
     </div>
 
     <div class="card-body">
-        <form action="">
-            <div class="row mb-4">
+        <form method="POST" action="{{ route("admin.files.store") }}" enctype="multipart/form-data" autocomplete="off">
+            @csrf
+            <div class="row">
                 <div class="form-group col-md-3">
                     <label class="required" for="series_id"
                         >{{ trans('cruds.file.fields.type_of_content') }}</label>
-                    <input type="text" class="form-control form-control-sm">
+                    <select name="series_id" id="series_id" class="form-control form-control-sm">
+                        <option value="">Please select</option>
+                        @foreach ($series as $value => $key)
+                            <option value="{{ $key }}">{{ $value }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="form-group col-md-3">
@@ -22,33 +28,29 @@
                     <label class="required" for="channels">{{ trans('cruds.file.fields.channel') }}</label>
                     <div class="select2-purple">
                         <select class="form-control form-control-sm select2" name="channels[]" id="channels" multiple required>
-                            <option value="CTN">CTN</option>
-                            <option value="MYTV">MYTV</option>
-                            <option value="CNC">CNC</option>
-                            <option value="Digital">Digital</option>
+                            @foreach(App\Models\File::CHANNEL_SELECT as $key => $label)
+                                <option value="{{ $key }}" {{ old('channels', '') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
 
-                <div class="form-group col-md-3">
-                    <label for="type_of_file">{{ trans('cruds.file.fields.type_of_file') }}</label>
-                    <select name="type_of_file" id="type_of_file" class="form-control form-control-sm">
-                        <option value="">Please select</option>
-                        <option value="Master Clean">Master Clean</option>
-                        <option value="Played">Played</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="dropdown-divider mb-4"></div>
-
-            <div class="row mb-4">
                 <div class="form-group col-md-3" id="segments">
                     <label for="segment">{{ trans('cruds.file.fields.segment') }}</label>
                     <input class="form-control form-control-sm" type="number" name="segment" id="segment">
                 </div>
+                
+            </div>
 
+            <div class="dropdown-divider mt-4 mb-2"></div>
+
+            <div class="row" style="position:realtive;">
+                <i class="fa fa-plus ml-2 toggle-show" style="cursor:pointer;position:absolute;display:none;" onclick="show()" data-toggle="tooltip" data-placement="top" title="Extend"></i>
+                <i class="fa fa-minus ml-2 toggle-hide" style="cursor:pointer;position:absolute;" onclick="hide()" data-toggle="tooltip" data-placement="top" title="Minimize"></i>
+            </div>
+
+            <div class="row mt-4" id="section">
+                
                 <div class="form-group col-md-3">
                     <label for="episode">{{ trans('cruds.file.fields.episode') }}</label>
                     <input type="number" name="episode" id="episode" class="form-control form-control-sm" />
@@ -160,19 +162,14 @@
                     <div class="input-group">
                         <div class="input-group-prepend">
                         <span class="input-group-text">
-                            <i class="far fa-calendar-alt"></i>
+                            <i class="far fa-clock"></i>
                         </span>
                         </div>
-                        <input type="text" name="period_of_time" class="form-control form-control-sm float-right daterang" id="period_of_time">
+                        <input type="text" name="period_of_time" class="form-control form-control-sm float-right" id="period_of_time">
                     </div>
                 </div>
 
-            </div>
-
-            <div class="dropdown-divider mb-4"></div>
-
-            <div class="row mb-4">
-                <div class="form-group col-md-6 mb-4">
+                <div class="form-group col-md-3 mb-4">
                     <label for="start_date">{{ trans('cruds.file.fields.start_date') }}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -184,7 +181,7 @@
                     </div>
                 </div>
 
-                <div class="form-group col-md-6 mb-4">
+                <div class="form-group col-md-3 mb-4">
                     <label for="end_date">{{ trans('cruds.file.fields.end_date') }}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -196,18 +193,48 @@
                     </div>
                 </div>
 
-                <div class="form-group col-md-4">
-                    <label for="genres">{{ trans('cruds.file.fields.genres') }}</label>
-                    <div class="select2-purple" width="1.8rem">
-                        <select class="form-control form-control-sm select2" name="genres[]" id="genres" multiple required>
-                            @foreach($genres as $genre)
-                                <option value="{{ $genre->id }}">{{ $genre->title }}</option>
+                <div class="form-group col-md-3">
+                    <label for="types">{{ trans('cruds.file.fields.type') }}</label>
+                    <div class="select2-purple">
+                        <select class="form-control form-control-sm select2" name="types[]" id="types" multiple required>
+                            @foreach(App\Models\File::TYPE_SELECT as $key => $label)
+                                <option value="{{ $key }}" {{ old('types', '') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
 
-                <div class="form-group col-md-2">
+                <div class="form-group col-md-3">
+                    <label for="territory">{{ trans('cruds.file.fields.territory') }}</label>
+                    <select name="territory" id="territory" class="form-control form-control-sm">
+                        <option value="">Please select</option>
+                        <option value="Cambodia">Cambodia</option>
+                        <option value="Global">Global</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label for="genres">{{ trans('cruds.file.fields.genres') }}</label>
+                    <div class="select2-purple" width="1.8rem">
+                        <select class="form-control form-control-sm select2" name="genres[]" id="genres" multiple required>
+                            @foreach(App\Models\File::GENRE_SELECT as $key => $label)
+                                <option value="{{ $key }}" {{ old('genres', '') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="dropdown-divider mt-4"></div>
+
+            <div class="row" style="position:realtive;">
+                <i class="fa fa-plus ml-2 toggle-show1" style="cursor:pointer;position:absolute;" onclick="showSeg1()" data-toggle="tooltip" data-placement="top" title="Extend"></i>
+                <i class="fa fa-minus ml-2 toggle-hide1" style="cursor:pointer;position:absolute;display:none;" onclick="hideSeg1()" data-toggle="tooltip" data-placement="top" title="Minimize"></i>
+            </div>
+
+            <div class="row mt-4" id="section1">
+                <div class="form-group col-md-3">
                     <label for="me">{{ trans('cruds.file.fields.me') }}</label><br>
                     <div class="icheck-primary d-inline">
                         <input type="radio" id="me1" name="me" value="0"/>
@@ -219,7 +246,7 @@
                     </div>
                 </div>
 
-                <div class="form-group col-md-2">
+                <div class="form-group col-md-3">
                     <label for="khmer_dub">{{ trans('cruds.file.fields.khmer_dub') }}</label><br>
                     <div class="icheck-primary d-inline">
                         <input type="radio" id="khmer_dub1" name="khmer_dub" value="0"/>
@@ -231,7 +258,7 @@
                     </div>
                 </div>
 
-                <div class="form-group col-md-2">
+                <div class="form-group col-md-3">
                     <label for="poster">{{ trans('cruds.file.fields.poster') }}</label><br>
                     <div class="icheck-primary d-inline">
                         <input type="radio" id="poster1" name="poster" value="0"/>
@@ -243,7 +270,7 @@
                     </div>
                 </div>
 
-                <div class="form-group col-md-2">
+                <div class="form-group col-md-3">
                     <label for="trailer_promo">{{ trans('cruds.file.fields.trailer_promo') }}</label><br>
                     <div class="icheck-primary d-inline">
                         <input type="radio" id="trailer_promo1" name="trailer_promo" value="0"/>
@@ -261,15 +288,15 @@
                 </div>
             </div>
 
-            <div class="dropdown-divider mb-4"></div>
+            <!-- <div class="dropdown-divider mt-4"></div> -->
 
-            <div class="row">
+            <div class="row mt-4">
                 <div class="form-group col-md-12">
                     <label for="remark">{{ trans('cruds.file.fields.remark') }}</label><br>
                     <textarea name="remark" id="" class="form-control" rows="5"></textarea>
                 </div>
                 <div class="form-group col-md-3">
-                    <label class="required" for="file_available">{{ trans('cruds.file.fields.file_available') }}</label><br>
+                    <label class="required" for="file_available" data-toggle="tooltip" data-placement="top" title="Yes, to make sure you have file..">{{ trans('cruds.file.fields.file_available') }}</label><br>
                     <div class="icheck-primary d-inline">
                         <input type="radio" id="file_available1" name="file_available" value="0"/>
                         <label for="file_available1">No</label>
@@ -279,6 +306,51 @@
                         <label for="file_available2">Yes</label>
                     </div>
                 </div>
+            </div>
+
+            <div class="dropdown-divider mt-4"></div>
+
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label for="seg_break">{{ trans('cruds.file.fields.segment_break') }}</label><br>
+                    <div class="icheck-primary d-inline">
+                        <input class="custom-control-input" type="checkbox" id="seg_break1" value="1">
+                        <!-- <input type="radio" id="seg_break1" name="seg_break" value="1"/> -->
+                        <label for="seg_break1">Have</label>
+                    </div>
+                </div>
+                <div class="row col-12" id="break" style="display:none;">
+                    <div class="form-group col-md-3">
+                        <label for="som">{{ trans('cruds.file.fields.som') }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="far fa-clock"></i>
+                            </span>
+                            </div>
+                            <input type="text" name="som" id="som" class="form-control form-control-sm timepicker" />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="eom">{{ trans('cruds.file.fields.eom') }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="far fa-clock"></i>
+                            </span>
+                            </div>
+                            <input type="text" name="eom" id="eom" class="form-control form-control-sm timepicker" />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <a class="text-primary" style="cursor:pointer;">Add Break</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-danger float-right" type="submit">
+                    {{ trans('global.save') }}
+                </button>
             </div>
         </form>
     </div>

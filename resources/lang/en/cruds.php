@@ -84,8 +84,8 @@ return [
         ],
     ],
     'file' => [
-        'title'             => 'Files Management',
-        'title_singular'    => 'File',
+        'title'             => 'Files ID Management',
+        'title_singular'    => 'File ID',
         'fields'            => [
             'id'                       => 'ID',
             'start_time'               => 'Remind Time',
@@ -106,8 +106,8 @@ return [
             'file_extension_helper'    => ' ',
             'resolution'               => 'Resolution',
             'resolution_helper'        => ' ',
-            'me'                      => 'M/E',
-            'me_helper'               => ' ',
+            'me'                       => 'M/E',
+            'me_helper'                => ' ',
             'khmer_dub'                => 'Khmer Dub',
             'khmer_dub_helper'         => ' ',
             'path'                     => 'Path',
@@ -141,7 +141,14 @@ return [
             'air_date'                 => 'On-Air Date',
             'segment'                  => 'Segment',
             'file_available'           => 'File Available',
-            'genres'                    => 'Genres'
+            'genres'                   => 'Genres',
+            'type'                     => 'Type',
+            'territory'                => 'Territory',
+            'segment_break'            => 'Segment Break',
+            'som'                      => 'SOM',
+            'eom'                      => 'EOM',
+            'user'                     => 'Author',
+            
         ],
     ],
 ];

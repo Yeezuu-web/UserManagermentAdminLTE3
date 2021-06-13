@@ -80,6 +80,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
+    public function files()
+    {
+        return $this->hasMany(File::class);
+    }
+
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');

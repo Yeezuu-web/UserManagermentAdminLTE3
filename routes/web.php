@@ -40,6 +40,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
 
     //files ID
     Route::resource('files', FilesController::class);
+    // Route::delete('files/destroy', FilesController::class, 'massDestroy')->name('files.massDestroy');
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
     // Change password

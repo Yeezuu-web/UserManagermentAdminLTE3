@@ -36,20 +36,6 @@
             </ul>
 
             <!-- Right navbar links -->
-            @if(count(config('panel.available_languages', [])) > 1)
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link" data-toggle="dropdown" href="#">
-                            {{ strtoupper(app()->getLocale()) }}
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            @foreach(config('panel.available_languages') as $langLocale => $langName)
-                                <a class="dropdown-item" href="{{ url()->current() }}?change_language={{ $langLocale }}">{{ strtoupper($langLocale) }} ({{ $langName }})</a>
-                            @endforeach
-                        </div>
-                    </li>
-                </ul>
-            @endif
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown notifications-menu">
                     <a href="#" class="nav-link" data-toggle="dropdown">
@@ -79,6 +65,18 @@
                         @endif
                     </div>
                 </li>
+                @if(count(config('panel.available_languages', [])) > 1)
+                  <li class="nav-item dropdown">
+                      <a class="nav-link" data-toggle="dropdown" href="#">
+                          {{ strtoupper(app()->getLocale()) }}
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-right">
+                          @foreach(config('panel.available_languages') as $langLocale => $langName)
+                              <a class="dropdown-item" href="{{ url()->current() }}?change_language={{ $langLocale }}">{{ strtoupper($langLocale) }} ({{ $langName }})</a>
+                          @endforeach
+                      </div>
+                  </li>
+                @endif
             </ul>
 
         </nav>
@@ -86,7 +84,7 @@
         @include('partials.menu')
         <div class="content-wrapper" style="min-height: 917px;">
             <!-- Main content -->
-            <section class="content" style="padding-top: 20px">
+            <section class="content p-4">
                 @if(session('message'))
                     <div class="row mb-2">
                         <div class="col-lg-12">
