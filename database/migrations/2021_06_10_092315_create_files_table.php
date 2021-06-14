@@ -43,7 +43,7 @@ class CreateFilesTable extends Migration
             $table->text('synopsis')->nullable();
             $table->text('remark')->nullable();
             $table->boolean('file_available')->nullable();
-            $table->bigInteger('content_id')->nullable();
+            $table->bigInteger('content_id');
             $table->foreignId('series_id')->nullable()->constrained();
             $table->foreignId('user_id')->nullable()->constrained();
             $table->timestamps();

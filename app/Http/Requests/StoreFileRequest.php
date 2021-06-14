@@ -17,12 +17,17 @@ class StoreFileRequest extends FormRequest
     public function rules()
     {
         return [
+            'series_id' => [
+                'required',
+            ],
             'title_of_content' => [
-                'string',
                 'required',
             ],
             'channels' => [
                 'required',
+            ],
+            'segment' => [
+                'integer',
             ],
         ];
     }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use App\Models\User;
 use \DateTimeInterface;
+use App\Models\Segment;
 use App\Models\Schedule;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -32,6 +33,61 @@ class File extends Model
         '17' => 'Sci-fi', '18' => 'Sport', '19' => 'Stand-Up Comedy', '20' => 'Thriller',
     ];
 
+    public const STORAGE_SELECT = [
+        'Lacie' => 'Lacie',
+        'IBM'   => 'IBM',
+        'LTO'   => 'LTO',
+        'Tape'  => 'Tape',
+        'Other' => 'Other'
+    ];
+
+    public const SIZE_TYPE_SELECT = [
+        'TB'    => 'TB',
+        'GB'    => 'GB',
+        'MB'    => 'MB',
+        'KB'    => 'KB'
+    ];
+
+    public const FILE_EXTENSION_SELECT = [
+        'MXF'   => 'MXF',
+        'MP4'   => 'MP4',
+        'MPEG'  => 'MPEG',
+        'AVI'   => 'AVI',
+        'OTHER' => 'OTHER'
+    ];
+
+    public const RESOLUTION_SELECT = [
+        'HD'    => 'HD',
+        'SD'    => 'SD',
+        'OTHER' => 'OTHER'
+    ];
+
+    public const TERRITORY_SELECT = [
+        'CAMBODIA'  => 'CAMBODIA',
+        'GOBAL'     => 'GLOBAL',
+        'OTHER'     => 'OTHER'
+    ];
+
+    public const ME_RADIO = [
+        '1' => 'Have',
+        '2' => 'Don\'t have'
+    ];
+
+    public const KHMER_DUB_RADIO = [
+        '1' => 'Have',
+        '2' => 'Don\'t have'
+    ];
+
+    public const POSTER_RADIO = [
+        '1' => 'Have',
+        '2' => 'Don\'t have'
+    ];
+
+    public const TRAILER_PROMO_RADIO = [
+        '1' => 'Have',
+        '2' => 'Don\'t have'
+    ];
+
     protected $table = 'files';
 
     protected $dates = [
@@ -44,9 +100,15 @@ class File extends Model
         'air_date',
     ];
 
+    protected $casts = [
+        'channels' => 'array',
+        'types' => 'array',
+        'genres' => 'array'
+    ];
+
     protected $fillable = [
         'title_of_content',
-        'channels' => 'array',
+        'channels',
         'segment',
         'episode',
         'file_extension',
@@ -62,9 +124,9 @@ class File extends Model
         'period',
         'start_date',
         'end_date',
-        'types' => 'array',
+        'types',
         'territory',
-        'genres' => 'array',
+        'genres',
         'me',
         'khmer_dub',
         'poster',
@@ -72,6 +134,7 @@ class File extends Model
         'synopsis',
         'remark',
         'file_available',
+        'seg_break',
         'content_id',
         'series_id',
         'fileId',
@@ -83,19 +146,14 @@ class File extends Model
         return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
     }
 
-    public function setAirDateAttribute($value)
-    {
-        $this->attributes['air_date'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
-    }
+    // public function setAirDateAttribute($value)
+    // {
+    //     $this->attributes['air_date'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
+    // }
 
     public function getDateReceivedAttribute($value)
     {
         return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
-    }
-
-    public function setDateReceivedAttribute($value)
-    {
-        $this->attributes['date_received'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
     }
 
     public function getStartDateAttribute($value)
@@ -103,29 +161,14 @@ class File extends Model
         return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
     }
 
-    public function setStartDateAttribute($value)
-    {
-        $this->attributes['start_date'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
-    }
-
     public function getEndDateAttribute($value)
     {
         return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
     }
 
-    public function setEndDateAttribute($value)
-    {
-        $this->attributes['end_date'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
-    }
-
     public function getStartTimeAttribute($value)
     {
         return $value ? Carbon::parse($value)->format(config('panel.datetime_format')) : null;
-    }
-
-    public function setStartTimeAttribute($value)
-    {
-        $this->attributes['start_time'] = $value ? Carbon::createFromFormat(config('panel.datetime_format'), $value)->format('Y-m-d H:i:s') : null;
     }
 
     protected function serializeDate(DateTimeInterface $date)
@@ -139,5 +182,26 @@ class File extends Model
 
     public function user(){
         return $this->beLongsTo(User::class, 'user_id');
+    }
+    
+    public function segments(){
+        return $this->beLongsToMany(Segment::class)->withPivot(['som', 'eom']);
+    }
+
+
+    public static function boot(){
+        parent::boot();
+
+        static::creating(function($model) {
+            $model->content_id = File::where('series_id', $model->series_id)->max('content_id') + 1;
+            $model->fileId = $model->series_id .''. str_pad($model->content_id, 5, '0', STR_PAD_LEFT);
+        });
+        
+        static::updating(function($model) {
+            $content_id = File::where('series_id', $model->series_id)->max('content_id') + 1;
+            $model->content_id = $content_id;
+            $fileId = $model->series_id .''. str_pad($model->content_id, 5, '0', STR_PAD_LEFT);
+            $model->fileId = $fileId;
+        });
     }
 }

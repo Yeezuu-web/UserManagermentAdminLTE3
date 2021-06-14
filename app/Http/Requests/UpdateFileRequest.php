@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\File;
+use Gate;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Response;
 
 class UpdateFileRequest extends FormRequest
 {
@@ -13,7 +16,7 @@ class UpdateFileRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return Gate::allows('file_edit');
     }
 
     /**
@@ -24,7 +27,15 @@ class UpdateFileRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'series_id' => [
+                'required',
+            ],
+            'title_of_content' => [
+                'required',
+            ],
+            'channels' => [
+                'required',
+            ],
         ];
     }
 }

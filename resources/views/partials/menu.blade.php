@@ -30,6 +30,28 @@
                         </p>
                     </a>
                 </li>
+                    @can('file_import')
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route("admin.files.view") }}"  style="padding-left: 2rem;font-size: .85rem;">
+                            <i class="fas fa-fw fa-upload nav-icon" style="font-size: .85rem;">
+                            </i>
+                            <p>
+                                Import
+                            </p>
+                        </a>
+                    </li>
+                    @endcan
+                    @can('series_access')
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route("admin.files.series") }}"  style="padding-left: 2rem;font-size: .85rem;">
+                            <i class="fas fa-fw fa-list nav-icon" style="font-size: .85rem;">
+                            </i>
+                            <p>
+                                Type & Series
+                            </p>
+                        </a>
+                    </li>
+                    @endcan
                 @endcan
                 @can('user_management_access')
                     <li class="nav-item has-treeview {{ request()->is("admin/permissions*") ? "menu-open" : "" }} {{ request()->is("admin/roles*") ? "menu-open" : "" }} {{ request()->is("admin/users*") ? "menu-open" : "" }}">
