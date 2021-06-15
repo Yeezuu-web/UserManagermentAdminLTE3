@@ -19,7 +19,7 @@
     </div>
 
     <div class="card-body" id="card-boay-section">
-        <form id="frm" autocomplete="off">
+        <form id="frm" action="{{ route('admin.files.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
             @csrf
             <div class="row">
                 <input type="hidden" name="user_id" id="user_id" value="{{ auth()->user()->id }}">
@@ -333,31 +333,7 @@
                     </div>
                 </div>
                 <div class="row col-12" id="break" style="display:none;">
-                    <div class="form-group col-md-3">
-                        <label for="som">{{ trans('cruds.file.fields.som') }}</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <i class="far fa-clock"></i>
-                            </span>
-                            </div>
-                            <input type="text" name="som" id="som" class="form-control form-control-sm timepicker" />
-                        </div>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="eom">{{ trans('cruds.file.fields.eom') }}</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <i class="far fa-clock"></i>
-                            </span>
-                            </div>
-                            <input type="text" name="eom" id="eom" class="form-control form-control-sm timepicker" />
-                        </div>
-                    </div>
-                    <div class="form-group col-md-12">
-                        <a class="text-primary" style="cursor:pointer;">Add Break</a>
-                    </div>
+                    @livewire('segments')
                 </div>
             </div>
             <div class="card-footer">
@@ -372,7 +348,7 @@
 @section('scripts')
 @parent
     
-<script>
+{{-- <script>
     $(document).ready(function () {
         $('#frm').submit(function (e) { 
             e.preventDefault();
@@ -404,11 +380,12 @@
             let synopsis                = $('#synopsis').val();
             let remark                  = $('#remark').val();
             let file_available          = $('input[name="file_available"]:checked').val();
-            let seg_break          = $('input[name="seg_break"]:checked').val();
-            let user_id                  = $('#user_id').val();
+            let seg_break               = $('input[name="seg_break"]:checked').val();
+            let user_id                 = $('#user_id').val();
+            let breaks                  = $('input[name="breaks"]').val();
             let _token                  = $('input[name="_token"]').val();
 
-            // console.log(file_available);
+            console.log(breaks);
             const Toast = Swal.mixin({
                 toast: true,
                 position: 'top-end',
@@ -416,71 +393,71 @@
                 timer: 3000
             });
             
-            $.ajax({
-                type: "POST",
-                url: "{{route('admin.files.store')}}",
-                data: {
-                    _token:_token,
-                    user_id:user_id,
-                    series_id:series_id,
-                    title_of_content:title_of_content,
-                    channels:channels,
-                    segment:segment,
-                    episode:episode,
-                    file_extension:file_extension,
-                    resolution:resolution,
-                    duration:duration,
-                    size_type:size_type,
-                    file_size:file_size,
-                    path:path,
-                    storage:storage,
-                    date_received:date_received,
-                    air_date:air_date,
-                    year:year,
-                    period:period,
-                    start_date:start_date,
-                    end_date:end_date,
-                    types:types,
-                    territory:territory,
-                    genres:genres,  
-                    me:me,
-                    khmer_dub:khmer_dub,
-                    poster:poster,
-                    trailer_promo:trailer_promo,
-                    synopsis:synopsis,
-                    remark:remark,
-                    file_available:file_available,
-                    seg_break:seg_break
-                },
-                success: function (response) {
-                    if (response) {
-                        Swal.fire({
-                            position: 'top-end',
-                            icon: 'success',
-                            title: 'Your File ID has been saved',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        setTimeout(function () {
-                            location.href = "{{ route('admin.files.index') }}"; //Refresh page
-                        }, 1800);
-                    }
-                },
-                error: function (response) {
-                    console.log(response);
-                    $('#type_of_content_error').text('The type of content are required. Please select!');
-                    if(response.responseJSON.errors.series_id) {$('#series_id').addClass('is-invalid')};
-                    $('#title_of_content_error').text(response.responseJSON.errors.title_of_content);
-                    if(response.responseJSON.errors.title_of_content) {$('#title_of_content').addClass('is-invalid')};
-                    $('#channels_error').text(response.responseJSON.errors.channels);
-                    if(response.responseJSON.errors.channels) {$('#channels').addClass('is-invalid')};
-                    $('#segment_error').text(response.responseJSON.errors.segment);
-                    if(response.responseJSON.errors.segment) {$('#segment').addClass('is-invalid')};
-                }
-            });
+            // $.ajax({
+            //     type: "POST",
+            //     url: "{{route('admin.files.store')}}",
+            //     data: {
+            //         _token:_token,
+            //         user_id:user_id,
+            //         series_id:series_id,
+            //         title_of_content:title_of_content,
+            //         channels:channels,
+            //         segment:segment,
+            //         episode:episode,
+            //         file_extension:file_extension,
+            //         resolution:resolution,
+            //         duration:duration,
+            //         size_type:size_type,
+            //         file_size:file_size,
+            //         path:path,
+            //         storage:storage,
+            //         date_received:date_received,
+            //         air_date:air_date,
+            //         year:year,
+            //         period:period,
+            //         start_date:start_date,
+            //         end_date:end_date,
+            //         types:types,
+            //         territory:territory,
+            //         genres:genres,  
+            //         me:me,
+            //         khmer_dub:khmer_dub,
+            //         poster:poster,
+            //         trailer_promo:trailer_promo,
+            //         synopsis:synopsis,
+            //         remark:remark,
+            //         file_available:file_available,
+            //         seg_break:seg_break
+            //     },
+            //     success: function (response) {
+            //         if (response) {
+            //             Swal.fire({
+            //                 position: 'top-end',
+            //                 icon: 'success',
+            //                 title: 'Your File ID has been saved',
+            //                 showConfirmButton: false,
+            //                 timer: 1500
+            //             })
+            //             // setTimeout(function () {
+            //             //     location.href = "{{ route('admin.files.index') }}"; //Refresh page
+            //             // }, 1800);
+            //         }
+            //     },
+            //     error: function (response) {
+            //         console.log(response);
+            //         $('#type_of_content_error').text('The type of content are required. Please select!');
+            //         if(response.responseJSON.errors.series_id) {$('#series_id').addClass('is-invalid')};
+            //         $('#title_of_content_error').text(response.responseJSON.errors.title_of_content);
+            //         if(response.responseJSON.errors.title_of_content) {$('#title_of_content').addClass('is-invalid')};
+            //         $('#channels_error').text(response.responseJSON.errors.channels);
+            //         if(response.responseJSON.errors.channels) {$('#channels').addClass('is-invalid')};
+            //         $('#segment_error').text(response.responseJSON.errors.segment);
+            //         if(response.responseJSON.errors.segment) {$('#segment').addClass('is-invalid')};
+            //     }
+            // });
         })  
     });
-</script>
+</script> --}}
 <script>
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()

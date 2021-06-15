@@ -165,9 +165,29 @@ class FilesController extends Controller
 
     public function store(StoreFileRequest $request)
     {
-        $file = File::create($request->all());
+        // dd($request->all());
+        // $file = File::create($request->all());
 
-        return redirect()->route('admin.files.index');
+        if($request->seg_break == 1){
+            //attach break
+            // foreach ($request->breaks as $break){
+            //     $file->segments()->attach(
+            //         $break['segment_id'],
+            //         ['som' => $break['som'], 'eom' => $break['eom']]
+            //     );
+            // }
+
+            // calculate duration
+            dd(count($request->breaks));
+            // foreach ($request->breaks as $index => $break){
+            //     $diff[$index] = array(Carbon::parse($request->breaks[$index]['som'])->diff(Carbon::parse($request->breaks[$index]['eom']))->format('%H:%I:%S'));
+            //     // $times = [ $diff[$index] ];
+            //     $result = Helper::duration($diff[$index]);
+            //     dd($result);
+            // }
+        }
+
+        return redirect()->route('admin.files.index')->with('message', 'File ID create successfully!');
     }
 
     public function edit(File $file)
@@ -274,6 +294,6 @@ class FilesController extends Controller
 
         // return $result;
 
-        
+
     }
 }

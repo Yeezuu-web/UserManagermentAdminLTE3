@@ -185,7 +185,8 @@ class File extends Model
     }
     
     public function segments(){
-        return $this->beLongsToMany(Segment::class)->withPivot(['som', 'eom']);
+        return $this->beLongsToMany(Segment::class, 'file_segment_pivot', 'file_id', 'segment_id')
+        ->withPivot(['som', 'eom']);
     }
 
 

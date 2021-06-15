@@ -15,6 +15,7 @@ class Segment extends Model
     protected $fillable = [ 'name' ];
 
     public function files(){
-        return $this->beLongsToMany(File::class)->withPivot(['som', 'eom']);
+        return $this->beLongsToMany(File::class, 'file_segment_pivot', 'file_id', 'segment_id')
+        ->withPivot(['som', 'eom']);
     }
 }

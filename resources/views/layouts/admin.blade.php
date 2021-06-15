@@ -22,6 +22,7 @@
     <link href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('dist/css/adminlte.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet" />
+    @livewireStyles
     @yield('styles')
 </head>
 
@@ -159,6 +160,7 @@
     //# sourceMappingURL=adminlte.min.js.map
 
     </script>
+    @livewireScripts
     @yield('scripts')
 </body>
 
