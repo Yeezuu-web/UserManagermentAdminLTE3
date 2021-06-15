@@ -26,8 +26,8 @@ class StoreFileRequest extends FormRequest
             'channels' => [
                 'required',
             ],
-            'segment' => [
-                'integer',
+            'file_available' => [
+                'required',
             ],
         ];
     }

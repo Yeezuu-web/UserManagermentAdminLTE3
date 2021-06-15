@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreFileRequest;
 use App\Http\Requests\UpdateFileRequest;
+use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 use App\Http\Requests\MassDestroyFileRequest;
 use Symfony\Component\HttpFoundation\Response;
@@ -148,6 +149,10 @@ class FilesController extends Controller
 
             return $table->make(true);
         }
+
+        if(session('success_message')){
+            Alert::success('Success!', session('success_message'));
+        }
         
         return view('admin.files.index');
     }
@@ -165,29 +170,31 @@ class FilesController extends Controller
 
     public function store(StoreFileRequest $request)
     {
-        // dd($request->all());
-        // $file = File::create($request->all());
-
-        if($request->seg_break == 1){
-            //attach break
-            // foreach ($request->breaks as $break){
-            //     $file->segments()->attach(
-            //         $break['segment_id'],
-            //         ['som' => $break['som'], 'eom' => $break['eom']]
-            //     );
-            // }
-
-            // calculate duration
-            dd(count($request->breaks));
-            // foreach ($request->breaks as $index => $break){
-            //     $diff[$index] = array(Carbon::parse($request->breaks[$index]['som'])->diff(Carbon::parse($request->breaks[$index]['eom']))->format('%H:%I:%S'));
-            //     // $times = [ $diff[$index] ];
-            //     $result = Helper::duration($diff[$index]);
-            //     dd($result);
-            // }
+        //calculate duration if have break
+        if($request->breaks){
+            foreach ($request->breaks as $index => $break){
+                $diff[$index] = Carbon::parse($request->breaks[$index]['som'])->diff(Carbon::parse($request->breaks[$index]['eom']))->format('%H:%I:%S');
+            }
+        }
+        
+        if(!$request->duration){
+            $duration = Helper::duration($diff);
+            $file = File::create($request->except(['duration']) + ['duration' => $duration]);
+        }else {
+            $file = File::create($request->all());
         }
 
-        return redirect()->route('admin.files.index')->with('message', 'File ID create successfully!');
+        if($request->breaks){
+            // attach file to segment break
+            foreach ($request->breaks as $break){
+                $file->segments()->attach(
+                    $break['segment_id'],
+                    ['som' => $break['som'], 'eom' => $break['eom']]
+                );
+            }
+        }
+
+        return redirect()->route('admin.files.index')->withSuccessMessage('File ID create successfully!');
     }
 
     public function edit(File $file)

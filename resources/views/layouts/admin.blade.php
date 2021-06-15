@@ -139,7 +139,7 @@
     <script src="{{ asset('plugins/daterangepicker/daterangepicker.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script>
     <script src="{{ asset('js/main.js') }}"></script>
-    <script src="{{ asset('plugins/sweetalert2/sweetalert2/sweetalert2@10.js') }}"></script>
+    <!-- <script src="{{ asset('plugins/sweetalert2/sweetalert2/sweetalert2@10.js') }}"></script> -->
     <script>
         $(document).ready(function () {
           $(".notifications-menu").on('click', function () {
@@ -161,6 +161,7 @@
 
     </script>
     @livewireScripts
+    @include('sweetalert::alert')
     @yield('scripts')
 </body>
 
