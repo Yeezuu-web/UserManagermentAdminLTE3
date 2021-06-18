@@ -8,6 +8,7 @@ use App\Models\File;
 use App\Models\User;
 use App\Models\Series;
 use App\Helpers\Helper;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -171,7 +172,7 @@ class FilesController extends Controller
     public function store(StoreFileRequest $request)
     {
         //calculate duration if have break
-        if($request->breaks){
+        if($request->breaks && $request->seg_break == 1){
             foreach ($request->breaks as $index => $break){
                 $diff[$index] = Carbon::parse($request->breaks[$index]['som'])->diff(Carbon::parse($request->breaks[$index]['eom']))->format('%H:%I:%S');
             }
@@ -204,16 +205,39 @@ class FilesController extends Controller
         $series = DB::table('series')->pluck('id', 'name');
         
         $files = File::with(['series'])->get();
-        // dd($file);
+
+        $file->load('segments');
+        
         return view('admin.files.edit', compact('file', 'files', 'series'));
     }
 
     public function update(UpdateFileRequest $request, File $file)
     {
-        // dd($request->all());
-        $file->update($request->all());
+        //calculate duration if have break
+        if($request->breaks && $request->seg_break == 1){
+            foreach ($request->breaks as $index => $break){
+                $diff[$index] = Carbon::parse($request->breaks[$index]['som'])->diff(Carbon::parse($request->breaks[$index]['eom']))->format('%H:%I:%S');
+            }
 
-        return redirect()->route('admin.files.index')->with('message', 'File Information has been Updated !');
+            $duration = Helper::duration($diff);
+
+            $file->update($request->except(['duration']) + ['duration' => $duration]);
+
+            $file->segments()->detach();
+
+            foreach ($request->breaks as $break){
+                $file->segments()->attach(
+                    $break['segment_id'],
+                    ['som' => $break['som'], 'eom' => $break['eom']]
+                );
+            }
+        }else {
+            $file->segments()->detach();
+
+            $file->update($request->all());
+        }
+
+        return redirect()->route('admin.files.index')->withSuccessMessage('File ID update successfully!');
     }
 
 

@@ -51,7 +51,7 @@
                     <div class="select2-purple">
                         <select class="form-control form-control-sm select2" name="channels[]" id="channels" multiple>
                             @foreach(App\Models\File::CHANNEL_SELECT as $key => $label)
-                                <option value="{{ $key }}">{{ $label }}</option>
+                                <option value="{{ $key }}" {{ (in_array($key, old('channels', [])) || in_array($key, $file->channels ? old('channels', $file->channels) : old('channels', []))) ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
                         </select>
                         <span class="invalid-feedback" id="channels_error">
@@ -220,7 +220,7 @@
                     <div class="select2-purple">
                         <select class="form-control form-control-sm select2" name="types[]" id="types" multiple>
                             @foreach(App\Models\File::TYPE_SELECT as $key => $label)
-                                <option value="{{ $key }}">{{ $label }}</option>
+                                <option value="{{ $key }}" {{ (in_array($key, old('types', [])) || in_array($key, $file->types ? old('types', $file->types) : old('types', []))) ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -241,7 +241,7 @@
                     <div class="select2-purple" width="1.8rem">
                         <select class="form-control form-control-sm select2" name="genres[]" id="genres" multiple>
                             @foreach(App\Models\File::GENRE_SELECT as $key => $label)
-                                <option value="{{ $key }}">{{ $label }}</option>
+                                <option value="{{ $key }}" {{ (in_array($key, old('genres', [])) || in_array($key, $file->genres ? old('genres', $file->genres) : old('genres', []))) ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -336,31 +336,9 @@
                     </div>
                 </div>
                 <div class="row col-12" id="break" style="display:none;">
-                    <div class="form-group col-md-3">
-                        <label for="som">{{ trans('cruds.file.fields.som') }}</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <i class="far fa-clock"></i>
-                            </span>
-                            </div>
-                            <input type="text" name="som" id="som" class="form-control form-control-sm timepicker" />
-                        </div>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="eom">{{ trans('cruds.file.fields.eom') }}</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <i class="far fa-clock"></i>
-                            </span>
-                            </div>
-                            <input type="text" name="eom" id="eom" class="form-control form-control-sm timepicker" />
-                        </div>
-                    </div>
-                    <div class="form-group col-md-12">
-                        <a class="text-primary" style="cursor:pointer;">Add Break</a>
-                    </div>
+                    @livewire('edit-segments', [
+                        'file' => $file,
+                        ])
                 </div>
             </div>
             <div class="card-footer">
