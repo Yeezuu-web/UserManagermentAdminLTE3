@@ -14,19 +14,18 @@
         <form id="frm" wire:submit.prevent="store">
             @csrf
             <div class="row">
-                <input type="hidden" wire:model.defer="frm.user_id" id="user_id" value="{{ auth()->user()->id }}">
                 <div class="form-group col-md-3">
                     <label class="required" for="series_id"
                         >{{ trans('cruds.file.fields.type_of_content') }}</label>
-                    <select wire:model.defer="frm.series_id" id="series_id" class="form-control form-control-sm @error('series_id') is-invalid @enderror">
+                    <select wire:model.defer="frm.series_id" class="form-control form-control-sm ">
                         <option value="">Please select</option>
                         @foreach ($series as $value => $key)
                             <option value="{{ $key }}" {{ old('series_id', '') === (string) $key ? 'selected' : '' }}>{{ $value }}</option>
                         @endforeach
                     </select>
-                    @error('series_id')
-                    <span class="invalid-feedback" id="type_of_content_error">
-                        The type of content is required.
+                    @error('frm.series_id')
+                    <span class="text-danger text-sm" id="type_of_content_error">
+                        {{$message}}
                     </span>
                     @enderror
                 </div>
@@ -34,9 +33,9 @@
                 <div class="form-group col-md-3">
                     <label class="required" for="title_of_content"
                         >{{ trans('cruds.file.fields.title_of_content') }}</label>
-                    <input type="text" wire:model.defer="frm.title_of_content" id="title_of_content" class="form-control form-control-sm @error('title_of_content') is-invalid @enderror">
-                    @error('title_of_content')
-                    <span class="invalid-feedback" id="title_of_content_error">
+                    <input type="text" wire:model.defer="frm.title_of_content" id="title_of_content" class="form-control form-control-sm">
+                    @error('frm.title_of_content')
+                    <span class="text-danger text-sm" id="title_of_content_error">
                         {{$message}}
                     </span>
                     @enderror
@@ -44,18 +43,21 @@
 
                 <div class="form-group col-md-3">
                     <label class="required" for="channels">{{ trans('cruds.file.fields.channel') }}</label>
-                    <div class="select2-purple">
-                        <select class="form-control form-control-sm select2 @error('channels') is-invalid @enderror" wire:model.defer="frm.channels" id="channels" multiple>
+                    <div class="select2-purple" wire:ignore>
+                        <select class="form-control form-control-sm select2" wire:model.defer="frm.channels" id="channels" multiple>
                             @foreach(App\Models\File::CHANNEL_SELECT as $key => $label)
                                 <option value="{{ $key }}" {{ old('channels', '') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
                         </select>
-                        {{-- @error('channels') --}}
-                        <span class="invalid-feedback" id="channels_error">
-                            {{-- {{$message}} --}}
-                        </span>
-                        {{-- @enderror --}}
                     </div>
+                    @error('frm.channels')
+                    <span class="text-danger text-sm" style="width: 100%;
+                        margin-top: .25rem;
+                        font-size: 80%;
+                        color: #dc3545;">
+                        {{$message}}
+                    </span>
+                    @enderror
                 </div>
 
                 <div class="form-group col-md-3" id="segments">
@@ -216,7 +218,7 @@
 
                 <div class="form-group col-md-3">
                     <label for="types">{{ trans('cruds.file.fields.type') }}</label>
-                    <div class="select2-purple">
+                    <div class="select2-purple" wire:ignore>
                         <select class="form-control form-control-sm select2" wire:model.defer="frm.types" id="types" multiple>
                             @foreach(App\Models\File::TYPE_SELECT as $key => $label)
                                 <option value="{{ $key }}" {{ old('types', '') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
@@ -237,7 +239,7 @@
 
                 <div class="form-group col-md-3">
                     <label for="genres">{{ trans('cruds.file.fields.genres') }}</label>
-                    <div class="select2-purple" width="1.8rem">
+                    <div class="select2-purple" wire:ignore width="1.8rem">
                         <select class="form-control form-control-sm select2" wire:model.defer="frm.genres" id="genres" multiple>
                             @foreach(App\Models\File::GENRE_SELECT as $key => $label)
                                 <option value="{{ $key }}" {{ old('genres', '') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
@@ -312,14 +314,14 @@
                 <div class="form-group col-md-3">
                     <label class="required" for="file_available" data-toggle="tooltip" data-placement="top" title="Yes, to make sure you have file..">{{ trans('cruds.file.fields.file_available') }}</label><br>
                     <div class="icheck-primary d-inline">
-                        <input type="radio" id="file_available1" wire:model.defer="frm.file_available" value="0"/>
+                        <input type="radio" id="file_available1" class="@error('frm.file_available') is-invalid @enderror" wire:model.defer="frm.file_available" value="0"/>
                         <label for="file_available1">No</label>
                     </div>
                     <div class="icheck-primary d-inline">
-                        <input type="radio" id="file_available2" wire:model.defer="frm.file_available" value="1"/>
+                        <input type="radio" id="file_available2" class="@error('frm.file_available') is-invalid @enderror" wire:model.defer="frm.file_available" value="1"/>
                         <label for="file_available2">Yes</label>
                     </div><br>
-                    @error('file_available')
+                    @error('frm.file_available')
                     <span class="text-danger text-sm">{{$message}}</span>
                     @enderror
                 </div>
@@ -336,8 +338,76 @@
                         <label for="seg_break">Have</label>
                     </div>
                 </div>
-                <div class="row col-12" id="break" style="display:none;">
-                    @livewire('segments')
+                <div class="row col-12" id="break" style="display:none;" wire:ignore.self>
+                    <!-- @livewire('segments') -->
+                    <div class="card col-md-12">
+                        <div class="card-header">Segment</div>
+                        <div class="card-body">
+                            <table class="table" id="products_table">
+                                <thead>
+                                <tr>
+                                    <th>Break</th>
+                                    <th>SOM</th>
+                                    <th>EOM</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach ($breaks as $index => $break)
+                                    <tr>
+                                        <td>
+                                            <select name="breaks[{{$index}}][segment_id]" 
+                                                wire:model="breaks.{{$index}}.segment_id"
+                                                class="form-control form-control-sm">
+                                                <option value="">-- choose break --</option>
+                                                @foreach ($allSegments as $segment)
+                                                    <option value="{{ $segment->id }}">{{ $segment->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="far fa-clock"></i>
+                                                    </span>
+                                                </div>
+                                                <input  type="text" 
+                                                        name="breaks[{{$index}}][som]" 
+                                                        class="form-control form-control-sm" 
+                                                        wire:model="breaks.{{$index}}.som" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="far fa-clock"></i>
+                                                    </span>
+                                                </div>
+                                                <input  type="text" 
+                                                        name="breaks[{{$index}}][eom]" 
+                                                        class="form-control form-control-sm" 
+                                                        wire:model="breaks.{{$index}}.eom" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a href="#" wire:click.prevent="removeBreak({{$index}})">Delete</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <button wire:click.prevent="addBreak()" class="btn btn-sm btn-secondary">Add Break</button>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                        
+
+
                     {{-- @include('admin.files.break') --}}
                 </div>
             </div>

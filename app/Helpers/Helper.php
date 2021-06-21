@@ -35,7 +35,7 @@ class Helper{
         $s = $totaltime - ($m * 60);
 
         //Result 
-        $result = "$h:$m:$s";
+        $result = str_pad($h, 2, '0', STR_PAD_LEFT).':'.str_pad($m, 2, '0', STR_PAD_LEFT).':'.str_pad($s, 2, '0', STR_PAD_LEFT);
 
         // Return the result
         return $result;

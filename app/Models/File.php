@@ -141,19 +141,34 @@ class File extends Model
         'user_id',
     ];
 
+    public function getDurationAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format(config('panel.time_format')) : null;
+    }
+
+    public function setDurationAttribute($value)
+    {
+        $this->attributes['duration'] = $value ? Carbon::createFromFormat(config('panel.time_format'), $value)->format('H:i:s') : null;
+    }
+
     public function getAirDateAttribute($value)
     {
         return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
     }
 
-    // public function setAirDateAttribute($value)
-    // {
-    //     $this->attributes['air_date'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
-    // }
+    public function setAirDateAttribute($value)
+    {
+        $this->attributes['air_date'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
+    }
 
     public function getDateReceivedAttribute($value)
     {
         return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
+    }
+
+    public function setDateReceivedAttribute($value)
+    {
+        $this->attributes['date_received'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
     }
 
     public function getStartDateAttribute($value)
@@ -161,14 +176,19 @@ class File extends Model
         return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
     }
 
+    public function setStartDateAttribute($value)
+    {
+        $this->attributes['start_date'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
+    }
+
     public function getEndDateAttribute($value)
     {
         return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
     }
 
-    public function getStartTimeAttribute($value)
+    public function setEndDateAttribute($value)
     {
-        return $value ? Carbon::parse($value)->format(config('panel.datetime_format')) : null;
+        $this->attributes['end_date'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
     }
 
     protected function serializeDate(DateTimeInterface $date)

@@ -131,9 +131,8 @@ body{
 
 @endsection
 
-@section('scripts')
+@push('scripts')
 @parent
-
 @can('table_button')  
 <script>
     $(function() {
@@ -433,4 +432,4 @@ body{
     
     })
 </script>
-@endsection
+@endpush

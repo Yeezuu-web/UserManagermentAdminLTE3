@@ -1,4 +1,12 @@
 @extends('layouts.admin')
+@section('styles')
+<style>
+.has-error {
+    border-radius: .40px !important;
+    border-color: rgb(185, 74, 72) !important;
+}
+</style>
+@endsection
 @section('content')
 <div style="margin-bottom: 10px;" class="row">
     <div class="col-lg-12">
@@ -9,7 +17,7 @@
 </div>
 @livewire('create-file-component', ['series' => $series], key($series->id))
 @endsection
-@section('scripts')
+@push('scripts')
 @parent
 <script>
     $(function () {
@@ -90,4 +98,12 @@
         });
     });
 </script>
-@endsection
+@error('frm.channels')
+<script>
+$(document).ready(function(){
+    console.log('error channels');
+    $('span.select2-container').addClass('is-invalid');
+})
+</script>
+@enderror
+@endpush
