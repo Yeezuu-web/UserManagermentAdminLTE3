@@ -19,7 +19,8 @@
     </div>
 
     <div class="card-body" id="card-boay-section">
-        <form id="frm" action="{{ route('admin.files.store') }}" method="POST" enctype="multipart/form-data">
+        {{-- <form id="frm" action="{{ route('admin.files.store') }}" method="POST" enctype="multipart/form-data"> --}}
+        <form id="frm">
             @csrf
             <div class="row">
                 <input type="hidden" name="user_id" id="user_id" value="{{ auth()->user()->id }}">
@@ -58,11 +59,11 @@
                                 <option value="{{ $key }}" {{ old('channels', '') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
                         </select>
-                        @error('channels')
+                        {{-- @error('channels') --}}
                         <span class="invalid-feedback" id="channels_error">
-                            {{$message}}
+                            {{-- {{$message}} --}}
                         </span>
-                        @enderror
+                        {{-- @enderror --}}
                     </div>
                 </div>
 
@@ -346,6 +347,7 @@
                 </div>
                 <div class="row col-12" id="break" style="display:none;">
                     @livewire('segments')
+                    {{-- @include('admin.files.break') --}}
                 </div>
             </div>
             <div class="card-footer">
@@ -359,7 +361,26 @@
 @endsection
 @section('scripts')
 @parent
-    
+<script>
+$(document).ready(function(){
+    let row_number = 1;
+    $("#add_row").click(function(e){
+        e.preventDefault();
+        let new_row_number = row_number - 1;
+        $('#break' + row_number).html($('#break' + new_row_number).html()).find('td:first-child');
+        $('#breaks_table').append('<tr id="break' + (row_number + 1) + '"></tr>');
+        row_number++;
+    });
+
+    $("#delete_row").click(function(e){
+        e.preventDefault();
+        if(row_number > 1){
+            $("#break" + (row_number - 1)).html('');
+            row_number--;
+        }
+    });
+});
+</script>    
 {{-- <script>
     $(document).ready(function () {
         $('#frm').submit(function (e) { 
@@ -394,16 +415,19 @@
             let file_available          = $('input[name="file_available"]:checked').val();
             let seg_break               = $('input[name="seg_break"]:checked').val();
             let user_id                 = $('#user_id').val();
-            let breaks                  = $('[name^="breaks"]').val();
+            let x = $('[name^="breaks[]"]').val();
+            let breaks                  = $.each(x, function(i, v){ return v});
+            let soms                    = $('#soms').val();
+            let eoms                    = $('#eoms').val();
             let _token                  = $('input[name="_token"]').val();
 
             console.log(breaks);
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000
-            });
+            // const Toast = Swal.mixin({
+            //     toast: true,
+            //     position: 'top-end',
+            //     showConfirmButton: false,
+            //     timer: 3000
+            // });
             
             $.ajax({
                 type: "POST",
@@ -439,26 +463,29 @@
                     synopsis:synopsis,
                     remark:remark,
                     file_available:file_available,
-                    seg_break:seg_break
+                    seg_break:seg_break,
+                    breaks:breaks,
+                    soms:soms,
+                    eoms:eoms
                 },
                 success: function (response) {
-                    if (response) {
-                        Swal.fire({
-                            position: 'top-end',
-                            icon: 'success',
-                            title: 'Your File ID has been saved',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        // setTimeout(function () {
-                        //     location.href = "{{ route('admin.files.index') }}"; //Refresh page
-                        // }, 1800);
-                    }
+                    // if (response) {
+                    //     Swal.fire({
+                    //         position: 'top-end',
+                    //         icon: 'success',
+                    //         title: 'Your File ID has been saved',
+                    //         showConfirmButton: false,
+                    //         timer: 1500
+                    //     })
+                    //     // setTimeout(function () {
+                    //     //     location.href = "{{ route('admin.files.index') }}"; //Refresh page
+                    //     // }, 1800);
+                    // }
                 },
                 error: function (response) {
                     console.log(response);
                     $('#type_of_content_error').text('The type of content are required. Please select!');
-                    if(response.responseJSON.errors.series_id) {$('#series_id').addClass('is-invalid')};
+                    // if(response.responseJSON.errors.series_id) {$('#series_id').addClass('is-invalid')};
                     $('#title_of_content_error').text(response.responseJSON.errors.title_of_content);
                     if(response.responseJSON.errors.title_of_content) {$('#title_of_content').addClass('is-invalid')};
                     $('#channels_error').text(response.responseJSON.errors.channels);

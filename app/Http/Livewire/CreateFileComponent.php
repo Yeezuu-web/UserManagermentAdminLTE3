@@ -23,15 +23,16 @@ class CreateFileComponent extends Component
         return view('livewire.create-file-component');
     }
 
-    public function create()
+    public function store()
     {
-        $fileId = Validator::make($this->frm, [
-            'series_id' => 'required',
-            'title_of_content' => 'required',
-            'channels' => 'required',
-        ])->validate();
+        dd($this->frm['genres']);
+        // $fileId = Validator::make($this->frm, [
+        //     'series_id' => 'required',
+        //     'title_of_content' => 'required',
+        //     'channels' => 'required',
+        // ])->validate();
 
-        File::create($fileId);
+        // File::create($fileId);
 
         return back();
     }

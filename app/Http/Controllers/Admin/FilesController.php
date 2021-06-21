@@ -8,6 +8,7 @@ use App\Models\File;
 use App\Models\User;
 use App\Models\Series;
 use App\Helpers\Helper;
+use App\Models\Segment;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -166,34 +167,46 @@ class FilesController extends Controller
         
         $files = File::with(['user', 'series'])->get();
 
-        return view('admin.files.create', compact('files', 'series'));
+        $breaks = Segment::all();
+
+        return view('admin.files.create-livewire', compact('files', 'series', 'breaks'));
     }
 
     public function store(StoreFileRequest $request)
     {
         //calculate duration if have break
-        if($request->breaks && $request->seg_break == 1){
-            foreach ($request->breaks as $index => $break){
-                $diff[$index] = Carbon::parse($request->breaks[$index]['som'])->diff(Carbon::parse($request->breaks[$index]['eom']))->format('%H:%I:%S');
-            }
-        }
-        
-        if(!$request->duration){
-            $duration = Helper::duration($diff);
-            $file = File::create($request->except(['duration']) + ['duration' => $duration]);
-        }else {
-            $file = File::create($request->all());
-        }
 
-        if($request->breaks){
-            // attach file to segment break
-            foreach ($request->breaks as $break){
-                $file->segments()->attach(
-                    $break['segment_id'],
-                    ['som' => $break['som'], 'eom' => $break['eom']]
-                );
+        $breaks = $request->input('breaks', []);
+        $soms = $request->input('soms', []);
+        $eoms = $request->input('eoms', []);
+        dd($breaks);
+        for ($break=0; $break < count($breaks); $break++) {
+            if ($breaks[$break] != '') {
+                dd($breaks[$break], ['som' => $soms[$break]], ['eom' => $roms[$break]]);
             }
         }
+        // if($request->breaks && $request->seg_break == 1){
+        //     foreach ($request->breaks as $index => $break){
+        //         $diff[$index] = Carbon::parse($request->breaks[$index]['som'])->diff(Carbon::parse($request->breaks[$index]['eom']))->format('%H:%I:%S');
+        //     }
+        // }
+        
+        // if(!$request->duration){
+        //     $duration = Helper::duration($diff);
+        //     $file = File::create($request->except(['duration']) + ['duration' => $duration]);
+        // }else {
+        //     $file = File::create($request->all());
+        // }
+
+        // if($request->breaks){
+        //     // attach file to segment break
+        //     foreach ($request->breaks as $break){
+        //         $file->segments()->attach(
+        //             $break['segment_id'],
+        //             ['som' => $break['som'], 'eom' => $break['eom']]
+        //         );
+        //     }
+        // }
 
         return redirect()->route('admin.files.index')->withSuccessMessage('File ID create successfully!');
     }
