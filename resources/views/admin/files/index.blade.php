@@ -32,14 +32,20 @@ body{
           <table class="float-right mb-4 col-md-4">
             <thead>
               <tr>
-                <td>
-                  <input type="text" class="form-control form-control-sm filter-input" data-column="2" placeholder="Search File ID...">
+                <!-- <td>
+                  <input type="text" id="min" name="min" class="form-control form-control-sm date" placeholder="Minimum Date">
                 </td>
                 <td>
-                  <input type="text" class="form-control form-control-sm filter-input" data-column="3" placeholder="Search Title...">
+                  <input type="text" id="max" name="max" class="form-control form-control-sm date" placeholder="Maximum Date">
+                </td> -->
+                <td>
+                  <input type="text" class="form-control form-control-sm filter-input" data-column="2" placeholder="Search by File ID...">
                 </td>
                 <td>
-                  <input type="text" class="form-control form-control-sm filter-input" data-column="4" placeholder="Search Chnnels...">
+                  <input type="text" class="form-control form-control-sm filter-input" data-column="3" placeholder="Search by Title...">
+                </td>
+                <td>
+                  <input type="text" class="form-control form-control-sm filter-input" data-column="26" placeholder="Search by Remarks...">
                 </td>
               </tr>
             </thead>
@@ -409,7 +415,7 @@ body{
                 { data: 'id', name: 'id' },
                 { data: 'fileId', name: 'fileId' },
                 { data: 'title_of_content', name: 'title_of_content' },
-                { data: 'channels', name: 'channels' },
+                { data: 'channels[, ]', name: 'channels' },
                 { data: 'segment', name: 'segment' },
                 { data: 'episode', name: 'episode' },
                 { data: 'duration', name: 'duration' },
@@ -447,13 +453,6 @@ body{
         });
 
         $('.filter-input').keyup(function(){
-          table.column( $(this).data('column') )
-            .search( $(this).val() )
-            .draw()
-        })
-
-        $('.filter-select').change(function(){
-          // console.log($(this).val());
           table.column( $(this).data('column') )
             .search( $(this).val() )
             .draw()

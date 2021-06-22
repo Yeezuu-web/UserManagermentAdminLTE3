@@ -260,8 +260,23 @@ class FilesController extends Controller
     public function show(File $file)
     {
         abort_if(Gate::denies('file_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        dd($file);
-        return view('admin.files.show', compact('file'));
+
+        $channels = array_map(function($value){
+            return File::CHANNEL_SELECT[$value];
+        }, $file->channels);
+        $channel = implode(", ", $channels);
+
+        $types = array_map(function($value){
+            return File::TYPE_SELECT[$value];
+        }, $file->types);
+        $type = implode(", ", $types);
+
+        $genres = array_map(function($value){
+            return File::GENRE_SELECT[$value];
+        }, $file->genres);
+        $genre = implode(", ", $genres);
+
+        return view('admin.files.show', compact('file', 'channel', 'genre', 'type'));
     }
 
     public function destroy(File $file)
