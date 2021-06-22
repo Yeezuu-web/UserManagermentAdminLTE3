@@ -91,6 +91,7 @@ class File extends Model
     protected $table = 'files';
 
     protected $dates = [
+        'duration',
         'date_received',
         'start_date',
         'end_date',
@@ -146,10 +147,10 @@ class File extends Model
         return $value ? Carbon::parse($value)->format(config('panel.time_format')) : null;
     }
 
-    public function setDurationAttribute($value)
-    {
-        $this->attributes['duration'] = $value ? Carbon::createFromFormat(config('panel.time_format'), $value)->format('H:i:s') : null;
-    }
+    // public function setDurationAttribute($value)
+    // {
+    //     $this->attributes['duration'] = $value ? Carbon::createFromFormat(config('panel.time_format'), $value)->format('H:i:s') : null;
+    // }
 
     public function getAirDateAttribute($value)
     {

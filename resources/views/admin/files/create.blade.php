@@ -33,37 +33,29 @@
                             <option value="{{ $key }}" {{ old('series_id', '') === (string) $key ? 'selected' : '' }}>{{ $value }}</option>
                         @endforeach
                     </select>
-                    @error('series_id')
                     <span class="invalid-feedback" id="type_of_content_error">
                         The type of content is required.
                     </span>
-                    @enderror
                 </div>
 
                 <div class="form-group col-md-3">
                     <label class="required" for="title_of_content"
                         >{{ trans('cruds.file.fields.title_of_content') }}</label>
                     <input type="text" name="title_of_content" id="title_of_content" class="form-control form-control-sm @error('title_of_content') is-invalid @enderror">
-                    @error('title_of_content')
                     <span class="invalid-feedback" id="title_of_content_error">
-                        {{$message}}
                     </span>
-                    @enderror
                 </div>
 
                 <div class="form-group col-md-3">
                     <label class="required" for="channels">{{ trans('cruds.file.fields.channel') }}</label>
-                    <div class="select2-purple">
+                    <div class="select2-purple" id="ch">
                         <select class="form-control form-control-sm select2 @error('channels') is-invalid @enderror" name="channels[]" id="channels" multiple>
                             @foreach(App\Models\File::CHANNEL_SELECT as $key => $label)
                                 <option value="{{ $key }}" {{ old('channels', '') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
                         </select>
-                        {{-- @error('channels') --}}
                         <span class="invalid-feedback" id="channels_error">
-                            {{-- {{$message}} --}}
                         </span>
-                        {{-- @enderror --}}
                     </div>
                 </div>
 
@@ -328,9 +320,7 @@
                         <input type="radio" id="file_available2" name="file_available" value="1"/>
                         <label for="file_available2">Yes</label>
                     </div><br>
-                    @error('file_available')
-                    <span class="text-danger text-sm">{{$message}}</span>
-                    @enderror
+                    <span class="text-danger text-sm" id="file_available_error"></span>
                 </div>
             </div>
 
@@ -360,28 +350,8 @@
 </div>
 @endsection
 @section('scripts')
-@parent
+@parent    
 <script>
-$(document).ready(function(){
-    let row_number = 1;
-    $("#add_row").click(function(e){
-        e.preventDefault();
-        let new_row_number = row_number - 1;
-        $('#break' + row_number).html($('#break' + new_row_number).html()).find('td:first-child');
-        $('#breaks_table').append('<tr id="break' + (row_number + 1) + '"></tr>');
-        row_number++;
-    });
-
-    $("#delete_row").click(function(e){
-        e.preventDefault();
-        if(row_number > 1){
-            $("#break" + (row_number - 1)).html('');
-            row_number--;
-        }
-    });
-});
-</script>    
-{{-- <script>
     $(document).ready(function () {
         $('#frm').submit(function (e) { 
             e.preventDefault();
@@ -415,19 +385,25 @@ $(document).ready(function(){
             let file_available          = $('input[name="file_available"]:checked').val();
             let seg_break               = $('input[name="seg_break"]:checked').val();
             let user_id                 = $('#user_id').val();
-            let x = $('[name^="breaks[]"]').val();
-            let breaks                  = $.each(x, function(i, v){ return v});
-            let soms                    = $('#soms').val();
-            let eoms                    = $('#eoms').val();
+            let breaks                  = $("[name^='breaks").map(function(){return $(this).val();}).get();
+            const newArr = [];
+            while(breaks.length) newArr.push(breaks.splice(0,3));
             let _token                  = $('input[name="_token"]').val();
 
-            console.log(breaks);
-            // const Toast = Swal.mixin({
-            //     toast: true,
-            //     position: 'top-end',
-            //     showConfirmButton: false,
-            //     timer: 3000
-            // });
+            // console.log([
+            //     breaks
+            // ]);
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
             
             $.ajax({
                 type: "POST",
@@ -464,39 +440,49 @@ $(document).ready(function(){
                     remark:remark,
                     file_available:file_available,
                     seg_break:seg_break,
-                    breaks:breaks,
-                    soms:soms,
-                    eoms:eoms
+                    breaks:newArr,
                 },
                 success: function (response) {
-                    // if (response) {
-                    //     Swal.fire({
-                    //         position: 'top-end',
-                    //         icon: 'success',
-                    //         title: 'Your File ID has been saved',
-                    //         showConfirmButton: false,
-                    //         timer: 1500
-                    //     })
-                    //     // setTimeout(function () {
-                    //     //     location.href = "{{ route('admin.files.index') }}"; //Refresh page
-                    //     // }, 1800);
-                    // }
+                    if (response) {
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'File ID create successfully!'
+                        })
+                        setTimeout(function () {
+                            location.href = "{{ route('admin.files.index') }}"; //Refresh page
+                        }, 1800);
+                    }
                 },
                 error: function (response) {
                     console.log(response);
                     $('#type_of_content_error').text('The type of content are required. Please select!');
-                    // if(response.responseJSON.errors.series_id) {$('#series_id').addClass('is-invalid')};
+                    if(response.responseJSON.errors.series_id) {
+                        $('#series_id').addClass('is-invalid');
+                        $('#series_id').focus();
+                    };
                     $('#title_of_content_error').text(response.responseJSON.errors.title_of_content);
-                    if(response.responseJSON.errors.title_of_content) {$('#title_of_content').addClass('is-invalid')};
+                    if(response.responseJSON.errors.title_of_content) {
+                        $('#title_of_content').addClass('is-invalid');
+                        $('#title_of_content').focus();
+                    };
                     $('#channels_error').text(response.responseJSON.errors.channels);
-                    if(response.responseJSON.errors.channels) {$('#channels').addClass('is-invalid')};
+                    if(response.responseJSON.errors.channels) {
+                        $('#channels').addClass('is-invalid');
+                        $('#channels').focus();
+                        $('#ch span span span').css('border', '1px solid #dc3545');
+                    };
                     $('#segment_error').text(response.responseJSON.errors.segment);
                     if(response.responseJSON.errors.segment) {$('#segment').addClass('is-invalid')};
+                    if(response.responseJSON.errors.file_available) {
+                        $('#file_available_error').text('Please select! This select cannot be empty.');
+                        $('input[name="file_available"]').focus();
+                    };
+                    if(response.errorTime){ console.log(response.errorTime)}
                 }
             });
         })  
     });
-</script> --}}
+</script>
 <script>
 
 </script>

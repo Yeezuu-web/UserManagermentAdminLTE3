@@ -12,21 +12,30 @@ use Illuminate\Support\Facades\Validator;
 
 class CreateFileComponent extends Component
 { 
-    public $series = [];
-    public $frm = [];
-    public $breaks = [];
-    public $allSegments = [];
+    public $series = []; //collection
+    public array $frm = [];
+    public array $breaks = [];
+    public $allSegments = []; //collection
+    public array $channels = [];
+    public array $types = [];
+    public array $genres = [];
+    public $date_recieved;
+    public $year;
+    public $air_date;
+    public $start_date;
+    public $end_date;
+    public $duration;
 
     protected $rules = [
         'frm.series_id' => 'required|max:1',
         'frm.title_of_content' => 'required',
-        'frm.channels' => 'required',
+        'channels' => 'required',
         'frm.file_available' => 'required',
     ];
 
     protected $messages = [
         'frm.series_id.required' => 'The Type of content cannot be empty.',
-        'frm.channels.required' => 'The Channel cannot be empty.',
+        'channels.required' => 'The Channel cannot be empty.',
         'frm.title_of_content.required' => 'The title of content cannot be empty.',
         'frm.file_available.required' => 'The File available cannot be uncheck.',
     ];
@@ -34,11 +43,11 @@ class CreateFileComponent extends Component
     public function mount()
     {
         $this->series = DB::table('series')->pluck('id', 'name');
-        $this->frm = [];
         $this->allSegments = Segment::all();
         $this->breaks = [
             ['segment_id' => '', 'som' => '00:00:00', 'eom' => '00:00:00']
         ];
+        $this->frm = [];
     }
 
     public function render()
@@ -60,26 +69,37 @@ class CreateFileComponent extends Component
     public function store()
     {
         $this->validate();
+
         $this->frm['user_id'] = auth()->user()->id;
-// dd(count($this->breaks) > 1);
-        if($this->frm['duration'] == NULL && $this->frm['seg_break'] == 1 && count($this->breaks) > 1){
+        $this->frm['channels'] = $this->channels;
+        $this->frm['types'] = $this->types;
+        $this->frm['genres'] = $this->genres;
+        $this->frm['date_recieved'] = $this->date_recieved;
+        $this->frm['year'] = $this->year;
+        $this->frm['air_date'] = $this->air_date;
+        $this->frm['start_date'] = $this->start_date;
+        $this->frm['end_date'] = $this->end_date;
+        $this->frm['seg_break'] = 0;
+
+        if($this->duration == NULL && $this->frm['seg_break'] == 1 && count($this->breaks) > 1){
             foreach ($this->breaks as $index => $break){
                 $diff[$index] = Carbon::parse($this->breaks[$index]['som'])->diff(Carbon::parse($this->breaks[$index]['eom']))->format('%H:%I:%S');
             }
+        }else{
+            $diff = [];
         }
-
-        // dd($diff);
-        // dd($this->frm['duration'] == NULL);
-        
-        if($this->frm['duration'] == NULL){
+        dd($this->frm['end_date']);
+        if($this->duration == NULL){
             $duration = Helper::duration($diff);
             $this->frm['duration'] = $duration;
+            // dd($this->frm['duration']);
             $file = File::create($this->frm);
         }else {
-            $file = File::create($this->frm);
+            dd($this->frm + ['duration' => $this->duration]);
+            $file = File::create($this->frm + [$this->duration]);
         }
 
-        if($this->breaks){
+        if(count($this->breaks) > 1){
             // attach file to segment break
             foreach ($this->breaks as $break){
                 $file->segments()->attach(

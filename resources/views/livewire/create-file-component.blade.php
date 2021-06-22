@@ -17,7 +17,7 @@
                 <div class="form-group col-md-3">
                     <label class="required" for="series_id"
                         >{{ trans('cruds.file.fields.type_of_content') }}</label>
-                    <select wire:model.defer="frm.series_id" class="form-control form-control-sm ">
+                    <select wire:model.defer="frm.series_id" class="form-control form-control-sm" required>
                         <option value="">Please select</option>
                         @foreach ($series as $value => $key)
                             <option value="{{ $key }}" {{ old('series_id', '') === (string) $key ? 'selected' : '' }}>{{ $value }}</option>
@@ -33,7 +33,7 @@
                 <div class="form-group col-md-3">
                     <label class="required" for="title_of_content"
                         >{{ trans('cruds.file.fields.title_of_content') }}</label>
-                    <input type="text" wire:model.defer="frm.title_of_content" id="title_of_content" class="form-control form-control-sm">
+                    <input type="text" wire:model.defer="frm.title_of_content" id="title_of_content" class="form-control form-control-sm" required>
                     @error('frm.title_of_content')
                     <span class="text-danger text-sm" id="title_of_content_error">
                         {{$message}}
@@ -44,17 +44,14 @@
                 <div class="form-group col-md-3">
                     <label class="required" for="channels">{{ trans('cruds.file.fields.channel') }}</label>
                     <div class="select2-purple" wire:ignore>
-                        <select class="form-control form-control-sm select2" wire:model.defer="frm.channels" id="channels" multiple>
+                        <select class="form-control form-control-sm select2" id="selectChannels" multiple required>
                             @foreach(App\Models\File::CHANNEL_SELECT as $key => $label)
                                 <option value="{{ $key }}" {{ old('channels', '') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
                         </select>
                     </div>
-                    @error('frm.channels')
-                    <span class="text-danger text-sm" style="width: 100%;
-                        margin-top: .25rem;
-                        font-size: 80%;
-                        color: #dc3545;">
+                    @error('channels')
+                    <span class="text-danger text-sm">
                         {{$message}}
                     </span>
                     @enderror
@@ -101,7 +98,7 @@
                             <i class="far fa-clock"></i>
                         </span>
                         </div>
-                        <input type="text" wire:model.defer="frm.duration" id="duration" class="form-control form-control-sm timepicker" />
+                        <input type="text" id="duration" class="form-control form-control-sm timepicker" />
                     </div>
                 </div>
 
@@ -144,26 +141,26 @@
                 </div>
 
                 <div class="form-group col-md-3">
-                    <label for="date_received">{{ trans('cruds.file.fields.date_received') }} (m-d-Y)</label>
+                    <label for="date_recieved">{{ trans('cruds.file.fields.date_received') }} (m-d-Y)</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                         <span class="input-group-text">
                             <i class="far fa-calendar-alt"></i>
                         </span>
                         </div>
-                        <input type="text" wire:model.defer="frm.date_received" id="date_received" class="form-control date form-control-sm" />
+                        <input type="text" id="date_recieved" class="form-control date form-control-sm" />
                     </div>
                 </div>                
 
                 <div class="form-group col-md-3">
-                    <label for="date_received">{{ trans('cruds.file.fields.air_date') }} (m-d-Y)</label>
+                    <label for="air_date">{{ trans('cruds.file.fields.air_date') }} (m-d-Y)</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                         <span class="input-group-text">
                             <i class="far fa-calendar-alt"></i>
                         </span>
                         </div>
-                        <input  type="text" wire:model.defer="frm.air_date" id="air_date" class="form-control date form-control-sm" />
+                        <input  type="text" id="air_date" class="form-control date form-control-sm" />
                     </div>
                 </div>
 
@@ -175,7 +172,7 @@
                             <i class="far fa-calendar-alt"></i>
                         </span>
                         </div>
-                        <input type="text" wire:model.defer="frm.year" id="year" class="form-control form-control-sm yearpicker" />
+                        <input type="text" id="year" class="form-control form-control-sm yearpicker" />
                     </div>
                 </div>
 
@@ -200,7 +197,7 @@
                             <i class="far fa-calendar-alt"></i>
                         </span>
                         </div>
-                        <input type="text" wire:model.defer="frm.start_date" id="start_date" class="form-control form-control-sm date" />
+                        <input type="text" id="start_date" class="form-control form-control-sm date" />
                     </div>
                 </div>
 
@@ -212,14 +209,14 @@
                             <i class="far fa-calendar-alt"></i>
                         </span>
                         </div>
-                        <input type="text" wire:model.defer="frm.end_date" id="end_date" class="form-control form-control-sm date" />
+                        <input type="text" id="end_date" class="form-control form-control-sm date" />
                     </div>
                 </div>
 
                 <div class="form-group col-md-3">
                     <label for="types">{{ trans('cruds.file.fields.type') }}</label>
                     <div class="select2-purple" wire:ignore>
-                        <select class="form-control form-control-sm select2" wire:model.defer="frm.types" id="types" multiple>
+                        <select class="form-control form-control-sm select2" id="selectTypes" multiple>
                             @foreach(App\Models\File::TYPE_SELECT as $key => $label)
                                 <option value="{{ $key }}" {{ old('types', '') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
@@ -240,7 +237,7 @@
                 <div class="form-group col-md-3">
                     <label for="genres">{{ trans('cruds.file.fields.genres') }}</label>
                     <div class="select2-purple" wire:ignore width="1.8rem">
-                        <select class="form-control form-control-sm select2" wire:model.defer="frm.genres" id="genres" multiple>
+                        <select class="form-control form-control-sm select2" id="selectGenres" multiple>
                             @foreach(App\Models\File::GENRE_SELECT as $key => $label)
                                 <option value="{{ $key }}" {{ old('genres', '') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
@@ -262,7 +259,7 @@
                     <label for="me">{{ trans('cruds.file.fields.me') }}</label><br>
                     @foreach(App\Models\File::ME_RADIO as $key => $label)
                         <div class="icheck-primary d-inline">
-                            <input type="radio" id="me_{{ $key }}" wire:model.defer="frm.me" value="{{ $key }}" {{ old('me', '') === (string) $key ? 'checked' : '' }}/>
+                            <input type="radio" id="me_{{ $key }}" name="me" wire:model.defer="frm.me" value="{{ $key }}" {{ old('me', '') === (string) $key ? 'checked' : '' }}/>
                             <label for="me_{{ $key }}">{{ $label }}</label>
                         </div>&nbsp;
                     @endforeach
@@ -272,7 +269,7 @@
                     <label for="khmer_dub">{{ trans('cruds.file.fields.khmer_dub') }}</label><br>
                     @foreach(App\Models\File::KHMER_DUB_RADIO as $key => $label)
                         <div class="icheck-primary d-inline">
-                            <input type="radio" id="khmer_dub_{{ $key }}" wire:model.defer="frm.khmer_dub" value="{{ $key }}" {{ old('khmer_dub', '') === (string) $key ? 'checked' : '' }}/>
+                            <input type="radio" id="khmer_dub_{{ $key }}" name="khmer_dub" wire:model.defer="frm.khmer_dub" value="{{ $key }}" {{ old('khmer_dub', '') === (string) $key ? 'checked' : '' }}/>
                             <label for="khmer_dub_{{ $key }}">{{ $label }}</label>
                         </div>&nbsp;
                     @endforeach
@@ -282,7 +279,7 @@
                     <label for="poster">{{ trans('cruds.file.fields.poster') }}</label><br>
                     @foreach(App\Models\File::POSTER_RADIO as $key => $label)
                         <div class="icheck-primary d-inline">
-                            <input type="radio" id="poster_{{ $key }}" wire:model.defer="frm.poster" value="{{ $key }}" {{ old('poster', '') === (string) $key ? 'checked' : '' }}/>
+                            <input type="radio" id="poster_{{ $key }}" name="poster" wire:model.defer="frm.poster" value="{{ $key }}" {{ old('poster', '') === (string) $key ? 'checked' : '' }}/>
                             <label for="poster_{{ $key }}">{{ $label }}</label>
                         </div>&nbsp;
                     @endforeach
@@ -292,13 +289,13 @@
                     <label for="trailer_promo">{{ trans('cruds.file.fields.trailer_promo') }}</label><br>
                     @foreach(App\Models\File::TRAILER_PROMO_RADIO as $key => $label)
                         <div class="icheck-primary d-inline">
-                            <input type="radio" id="trailer_promo_{{ $key }}" wire:model.defer="frm.trailer_promo" value="{{ $key }}" {{ old('trailer_promo', '') === (string) $key ? 'checked' : '' }}/>
+                            <input type="radio" id="trailer_promo_{{ $key }}" name="trailer_promo" wire:model.defer="frm.trailer_promo" value="{{ $key }}" {{ old('trailer_promo', '') === (string) $key ? 'checked' : '' }}/>
                             <label for="trailer_promo_{{ $key }}">{{ $label }}</label>
                         </div>&nbsp;
                     @endforeach
                 </div>
 
-                <div class="form-group col-md-12">
+                <div class="form-group col-md-12" wire:ignore>
                     <label for="synopsis">{{ trans('cruds.file.fields.synopsis') }}</label><br>
                     <textarea wire:model.defer="frm.synopsis" id="synopsis" class="form-control" rows="5"></textarea>
                 </div>
@@ -307,18 +304,18 @@
             <!-- <div class="dropdown-divider mt-4"></div> -->
 
             <div class="row mt-4">
-                <div class="form-group col-md-12">
+                <div class="form-group col-md-12" wire:ignore>
                     <label for="remark">{{ trans('cruds.file.fields.remark') }}</label><br>
                     <textarea wire:model.defer="frm.remark" id="remark" class="form-control" rows="5"></textarea>
                 </div>
                 <div class="form-group col-md-3">
                     <label class="required" for="file_available" data-toggle="tooltip" data-placement="top" title="Yes, to make sure you have file..">{{ trans('cruds.file.fields.file_available') }}</label><br>
                     <div class="icheck-primary d-inline">
-                        <input type="radio" id="file_available1" class="@error('frm.file_available') is-invalid @enderror" wire:model.defer="frm.file_available" value="0"/>
+                        <input type="radio" id="file_available1" name="file_available" wire:model.defer="frm.file_available" value="0"/>
                         <label for="file_available1">No</label>
                     </div>
                     <div class="icheck-primary d-inline">
-                        <input type="radio" id="file_available2" class="@error('frm.file_available') is-invalid @enderror" wire:model.defer="frm.file_available" value="1"/>
+                        <input type="radio" id="file_available2" name="file_available" wire:model.defer="frm.file_available" value="1"/>
                         <label for="file_available2">Yes</label>
                     </div><br>
                     @error('frm.file_available')
@@ -419,3 +416,36 @@
         </form>
     </div>
 </div>
+@push('scripts')
+<script>
+    document.addEventListener('livewire:load', function () {
+        $('#selectChannels').on('change', (e) => {
+            @this.set('channels', $('#selectChannels').select2('val'));
+        });
+        $('#selectTypes').on('change', (e) => {
+            @this.set('types', $('#selectTypes').select2('val'));
+        });
+        $('#selectGenres').on('change', (e) => {
+            @this.set('genres', $('#selectGenres').select2('val'));
+        });
+        $('#date_recieved').on('change', (e) => {
+            @this.set('date_recieved', e.target.value);
+        });
+        $('#air_date').on('change', (e) => {
+            @this.set('air_date', e.target.value);
+        });
+        $('#start_date').on('change', (e) => {
+            @this.set('start_date', e.target.value);
+        });
+        $('#end_date').on('change', (e) => {
+            @this.set('end_date', e.target.value);
+        });
+        $('#year').on('change', (e) => {
+            @this.set('year', e.target.value);
+        });
+        $('#duration').on('change', (e) => {
+            @this.set('duration', e.target.value);
+        });
+    });
+</script>
+@endpush

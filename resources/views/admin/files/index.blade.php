@@ -131,7 +131,7 @@ body{
 
 @endsection
 
-@push('scripts')
+@section('scripts')
 @parent
 @can('table_button')  
 <script>
@@ -432,4 +432,4 @@ body{
     
     })
 </script>
-@endpush
+@endsection

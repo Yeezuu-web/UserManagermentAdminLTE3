@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+{{-- @extends('layouts.admin')
 @section('styles')
 <style>
 .has-error {
@@ -17,8 +17,8 @@
 </div>
 @livewire('create-file-component', ['series' => $series], key($series->id))
 @endsection
+
 @push('scripts')
-@parent
 <script>
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
@@ -98,12 +98,4 @@
         });
     });
 </script>
-@error('frm.channels')
-<script>
-$(document).ready(function(){
-    console.log('error channels');
-    $('span.select2-container').addClass('is-invalid');
-})
-</script>
-@enderror
-@endpush
+@endpush --}}

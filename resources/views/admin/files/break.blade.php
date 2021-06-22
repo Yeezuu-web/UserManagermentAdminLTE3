@@ -15,7 +15,7 @@
             <tbody>
                 <tr id="break0">
                     <td>
-                        <select name="breaks[]" id="breaks" class="form-control">
+                        <select name="breaks[]" id="breaks0" class="form-control">
                             <option value="">-- choose product --</option>
                             @foreach ($breaks as $break)
                                 <option value="{{ $break->id }}">
@@ -25,10 +25,10 @@
                         </select>
                     </td>
                     <td>
-                        <input type="number" name="soms[]" id="soms" class="form-control" value="1" />
+                        <input type="text" name="soms[]" id="soms0" class="form-control timepicker" value="1" />
                     </td>
                     <td>
-                        <input type="number" name="eoms[]" id="eoms" class="form-control" value="1" />
+                        <input type="text" name="eoms[]" id="eoms0" class="form-control timepicker" value="1" />
                     </td>
                 </tr>
                 <tr id="break1"></tr>

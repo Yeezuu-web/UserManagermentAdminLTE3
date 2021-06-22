@@ -18,6 +18,7 @@ use App\Http\Requests\UpdateFileRequest;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 use App\Http\Requests\MassDestroyFileRequest;
+use Carbon\Exceptions\InvalidFormatException;
 use Symfony\Component\HttpFoundation\Response;
 
 class FilesController extends Controller
@@ -169,46 +170,48 @@ class FilesController extends Controller
 
         $breaks = Segment::all();
 
-        return view('admin.files.create-livewire', compact('files', 'series', 'breaks'));
+        return view('admin.files.create', compact('files', 'series', 'breaks'));
     }
 
     public function store(StoreFileRequest $request)
     {
         //calculate duration if have break
+        $breaks = $request->breaks;
 
-        $breaks = $request->input('breaks', []);
-        $soms = $request->input('soms', []);
-        $eoms = $request->input('eoms', []);
-        dd($breaks);
-        for ($break=0; $break < count($breaks); $break++) {
-            if ($breaks[$break] != '') {
-                dd($breaks[$break], ['som' => $soms[$break]], ['eom' => $roms[$break]]);
+        // dd($request->duration == NULL && $breaks != NULL && $request->seg_break == 1);
+    
+        if($request->duration == NULL && $breaks != NULL && $request->seg_break == 1){
+            foreach ($breaks as $index => $break){
+                try{
+                    $diff[$index] = Carbon::parse($breaks[$index][1])->diff(Carbon::parse($breaks[$index][2]))->format('%H:%I:%S');
+                }catch(InvalidFormatException $exception){
+                    // dd($exception->getMessage());
+                    return response()->jon('message', $exception->getMessage());
+                }
+            }
+        }else{
+            $diff = [];
+        }
+    
+        
+        if(!$request->duration){
+            $duration = Helper::duration($diff);
+            $file = File::create($request->except(['duration']) + ['duration' => $duration]);
+        }else {
+            $file = File::create($request->all());
+        }
+
+        if($breaks != NULL){
+            // attach file to segment break
+            foreach ($breaks as $index => $break){
+                $file->segments()->attach(
+                    $break[0],
+                    ['som' => $break[1], 'eom' => $break[2]]
+                );
             }
         }
-        // if($request->breaks && $request->seg_break == 1){
-        //     foreach ($request->breaks as $index => $break){
-        //         $diff[$index] = Carbon::parse($request->breaks[$index]['som'])->diff(Carbon::parse($request->breaks[$index]['eom']))->format('%H:%I:%S');
-        //     }
-        // }
-        
-        // if(!$request->duration){
-        //     $duration = Helper::duration($diff);
-        //     $file = File::create($request->except(['duration']) + ['duration' => $duration]);
-        // }else {
-        //     $file = File::create($request->all());
-        // }
 
-        // if($request->breaks){
-        //     // attach file to segment break
-        //     foreach ($request->breaks as $break){
-        //         $file->segments()->attach(
-        //             $break['segment_id'],
-        //             ['som' => $break['som'], 'eom' => $break['eom']]
-        //         );
-        //     }
-        // }
-
-        return redirect()->route('admin.files.index')->withSuccessMessage('File ID create successfully!');
+        return back();
     }
 
     public function edit(File $file)
