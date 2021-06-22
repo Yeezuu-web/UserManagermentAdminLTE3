@@ -252,8 +252,8 @@
             <div class="dropdown-divider mt-4"></div>
 
             <div class="row" style="position:realtive;">
-                <i class="fa fa-plus ml-2 toggle-show1" style="cursor:pointer;position:absolute;" onclick="showSeg1()" data-toggle="tooltip" data-placement="top" title="Extend"></i>
-                <i class="fa fa-minus ml-2 toggle-hide1" style="cursor:pointer;position:absolute;display:none;" onclick="hideSeg1()" data-toggle="tooltip" data-placement="top" title="Minimize"></i>
+                <i class="fa fa-plus ml-2 toggle-show1" style="cursor:pointer;position:absolute;display:none;" onclick="showSeg1()" data-toggle="tooltip" data-placement="top" title="Extend"></i>
+                <i class="fa fa-minus ml-2 toggle-hide1" style="cursor:pointer;position:absolute;" onclick="hideSeg1()" data-toggle="tooltip" data-placement="top" title="Minimize"></i>
             </div>
 
             <div class="row mt-4" id="section1">
@@ -326,7 +326,7 @@
 
             <div class="dropdown-divider mt-4"></div>
 
-            <div class="row">
+            <div class="row" id="breaking" style="display:none;">
                 <div class="form-group col-md-12">
                     <label for="seg_break">{{ trans('cruds.file.fields.segment_break') }}</label><br>
                     <input type="hidden" name="seg_break" value="0" />
@@ -563,6 +563,17 @@
                 // $('#break').css("display", $('#break').css("display") === 'none' ? '' : 'none');
             }
         });
+
+        //breaking show if file type select = Program
+        $('#series_id').change(function(){
+            var type = $(this).val();
+            if(type != '' && type == '1')
+            {
+                $('#breaking').css("display", '');
+            }else{
+                $('#breaking').css("display", 'none');
+            }
+        })
     });
 </script>
 @endsection
