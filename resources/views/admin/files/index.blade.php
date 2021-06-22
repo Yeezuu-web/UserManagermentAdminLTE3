@@ -29,6 +29,21 @@ body{
 
     <div class="card-body">
         <div class="table-responsive">
+          <table class="float-right mb-4 col-md-4">
+            <thead>
+              <tr>
+                <td>
+                  <input type="text" class="form-control form-control-sm filter-input" data-column="2" placeholder="Search File ID...">
+                </td>
+                <td>
+                  <input type="text" class="form-control form-control-sm filter-input" data-column="3" placeholder="Search Title...">
+                </td>
+                <td>
+                  <input type="text" class="form-control form-control-sm filter-input" data-column="4" placeholder="Search Chnnels...">
+                </td>
+              </tr>
+            </thead>
+          </table>
         <table class="table table-bordered table-striped table-hover ajaxTable datatable datatable-File">
                 <thead>
                     <tr>
@@ -123,7 +138,6 @@ body{
                         </th>
                     </tr>
                 </thead>
-                
             </table>
         </div>
     </div>
@@ -146,7 +160,8 @@ body{
       let selectNoneButtonTrans = '{{ trans('global.deselect_all') }}'
 
       let languages = {
-        'en': 'https://cdn.datatables.net/plug-ins/1.10.19/i18n/English.json'
+        'en': 'https://cdn.datatables.net/plug-ins/1.10.19/i18n/English.json',
+        'th': 'https://cdn.datatables.net/plug-ins/1.10.19/i18n/Thai.json'
       };
 
       $.extend(true, $.fn.dataTable.Buttons.defaults.dom.button, { className: 'btn' })
@@ -175,7 +190,7 @@ body{
         },
         order: [],
         scrollX: true,
-        pageLength: 100,
+        pageLength: 10,
         dom: 'lBfrtip<"actions">',
         buttons: [
           {
@@ -298,7 +313,7 @@ body{
         },
         order: [],
         scrollX: true,
-        pageLength: 100,
+        pageLength: 10,
         dom: 'lBfrtip<"actions">',
         buttons: [
           {
@@ -422,13 +437,27 @@ body{
             ],
             orderCellsTop: true,
             order: [[ 1, 'desc' ]],
-            pageLength: 50,
+            pageLength: 10,
         };
+
         let table = $('.datatable-File').DataTable(dtOverrideGlobals);
         $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e){
             $($.fn.dataTable.tables(true)).DataTable()
                 .columns.adjust();
         });
+
+        $('.filter-input').keyup(function(){
+          table.column( $(this).data('column') )
+            .search( $(this).val() )
+            .draw()
+        })
+
+        $('.filter-select').change(function(){
+          // console.log($(this).val());
+          table.column( $(this).data('column') )
+            .search( $(this).val() )
+            .draw()
+        })
     
     })
 </script>

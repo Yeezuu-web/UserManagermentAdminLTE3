@@ -230,7 +230,7 @@ class FilesController extends Controller
     public function update(UpdateFileRequest $request, File $file)
     {
         //calculate duration if have break
-        if($request->breaks && $request->seg_break == 1){
+        if($request->duration == NULL && $request->breaks != NULL && $request->seg_break == 1){
             foreach ($request->breaks as $index => $break){
                 $diff[$index] = Carbon::parse($request->breaks[$index]['som'])->diff(Carbon::parse($request->breaks[$index]['eom']))->format('%H:%I:%S');
             }
