@@ -32,12 +32,6 @@ body{
           <table class="float-right mb-4 col-md-4">
             <thead>
               <tr>
-                <!-- <td>
-                  <input type="text" id="min" name="min" class="form-control form-control-sm date" placeholder="Minimum Date">
-                </td>
-                <td>
-                  <input type="text" id="max" name="max" class="form-control form-control-sm date" placeholder="Maximum Date">
-                </td> -->
                 <td>
                   <input type="text" class="form-control form-control-sm filter-input" data-column="2" placeholder="Search by File ID...">
                 </td>
@@ -174,6 +168,10 @@ body{
       $.extend(true, $.fn.dataTable.defaults, {
         language: {
           url: languages['{{ app()->getLocale() }}']
+        },
+        searchPanes: {
+            viewTotal: true,
+            columns: [0, 3, 4]
         },
         columnDefs: [{
             orderable: false,
@@ -392,17 +390,6 @@ body{
         dtButtons.push(deleteButton)
         @endcan
 
-        // $.extend(true, $.fn.dataTable.defaults, {
-        //     orderCellsTop: true,
-        //     order: [[ 1, 'desc' ]],
-        //     pageLength: 50,
-        // });
-        // let table = $('.datatable-File:not(.ajaxTable)').DataTable({ buttons: dtButtons })
-        // $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e){
-        //     $($.fn.dataTable.tables(true)).DataTable()
-        //         .columns.adjust();
-        // });
-
         let dtOverrideGlobals = {
             buttons: dtButtons,
             processing: true,
@@ -415,7 +402,7 @@ body{
                 { data: 'id', name: 'id' },
                 { data: 'fileId', name: 'fileId' },
                 { data: 'title_of_content', name: 'title_of_content' },
-                { data: 'channels[, ]', name: 'channels' },
+                { data: 'channel', name: 'channel' },
                 { data: 'segment', name: 'segment' },
                 { data: 'episode', name: 'episode' },
                 { data: 'duration', name: 'duration' },

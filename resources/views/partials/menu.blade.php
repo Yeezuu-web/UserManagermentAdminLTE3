@@ -53,6 +53,28 @@
                     </li>
                     @endcan
                 @endcan
+                @can('schedule_access')
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route("admin.schedules.index") }}">
+                        <i class="fas fa-fw fa-calendar-alt nav-icon">
+                        </i>
+                        <p>
+                            {{ trans('global.schedule') }}
+                        </p>
+                    </a>
+                </li>
+                    @can('schedule_create')
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route("admin.schedules.list") }}"  style="padding-left: 2rem;font-size: .85rem;">
+                            <i class="fas fa-fw fa-calendar nav-icon" style="font-size: .85rem;">
+                            </i>
+                            <p>
+                                Schedule Builder
+                            </p>
+                        </a>
+                    </li>
+                    @endcan
+                @endcan
                 @can('user_management_access')
                     <li class="nav-item has-treeview {{ request()->is("admin/permissions*") ? "menu-open" : "" }} {{ request()->is("admin/roles*") ? "menu-open" : "" }} {{ request()->is("admin/users*") ? "menu-open" : "" }}">
                         <a class="nav-link nav-dropdown-toggle" href="#">

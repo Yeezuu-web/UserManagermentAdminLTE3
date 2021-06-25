@@ -50,7 +50,8 @@
                     <label class="required" for="channels">{{ trans('cruds.file.fields.channel') }}</label>
                     <div class="select2-purple" id="ch">
                         <select class="form-control form-control-sm select2 @error('channels') is-invalid @enderror" name="channels[]" id="channels" multiple>
-                            @foreach(App\Models\File::CHANNEL_SELECT as $key => $label)
+                            {{-- @foreach(App\Models\File::CHANNEL_SELECT as $key => $label) --}}
+                            @foreach($channels_raw as $key => $label)
                                 <option value="{{ $key }}" {{ old('channels', '') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
                         </select>

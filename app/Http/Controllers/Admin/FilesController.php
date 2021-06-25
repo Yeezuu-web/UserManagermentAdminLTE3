@@ -8,6 +8,7 @@ use App\Models\File;
 use App\Models\User;
 use App\Models\Series;
 use App\Helpers\Helper;
+use App\Models\Channel;
 use App\Models\Segment;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
@@ -16,10 +17,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreFileRequest;
 use App\Http\Requests\UpdateFileRequest;
 use RealRashid\SweetAlert\Facades\Alert;
-use Yajra\DataTables\Facades\DataTables;
 use App\Http\Requests\MassDestroyFileRequest;
 use Carbon\Exceptions\InvalidFormatException;
 use Symfony\Component\HttpFoundation\Response;
+use Yajra\DataTables\Facades\DataTables;
 
 class FilesController extends Controller
 {
@@ -28,12 +29,9 @@ class FilesController extends Controller
     {
         abort_if(Gate::denies('file_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $files = File::with(['user', 'series'])->get();
-
         if ($request->ajax()) {
-            // $query = UserAlert::with(['users'])->select(sprintf('%s.*', (new UserAlert())->table));
-            $query = File::with(['user', 'series'])->select(sprintf('%s.*', (new File())->table));
-            $table = Datatables::of($files);
+            $query = File::with(['user', 'series', 'channels', 'segments'])->whereNull('deleted_at')->get();
+            $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
             $table->addColumn('actions', '&nbsp;');
@@ -63,12 +61,12 @@ class FilesController extends Controller
             $table->editColumn('title_of_content', function ($row) {
                 return $row->title_of_content ? $row->title_of_content : '';
             });
-            $table->editColumn('channels', function ($row) {
-                $channels = $row->channels;
-                $channel = $channels ? array_map(function($value){
-                    return File::CHANNEL_SELECT[$value];
-                },$channels) : '';
-                return $channel;
+            $table->editColumn('channel', function ($row) {
+                $badges = [];
+                foreach ($row->channels as $channel) {
+                    $badges[] = $channel->name; // sprintf('<span class="badge badge-info badge-many">%s</span>', $channel->name);
+                }
+                return implode(', ', $badges);
             });
             $table->editColumn('segment', function ($row) {
                 return $row->segment ? $row->segment : '';
@@ -170,7 +168,9 @@ class FilesController extends Controller
 
         $breaks = Segment::all();
 
-        return view('admin.files.create', compact('files', 'series', 'breaks'));
+        $channels_raw = Channel::pluck('name', 'id');
+
+        return view('admin.files.create', compact('files', 'series', 'breaks', 'channels_raw'));
     }
 
     public function store(StoreFileRequest $request)
@@ -200,7 +200,7 @@ class FilesController extends Controller
         }else {
             $file = File::create($request->all());
         }
-
+        
         if($breaks != NULL){
             // attach file to segment break
             foreach ($breaks as $index => $break){
@@ -211,6 +211,8 @@ class FilesController extends Controller
             }
         }
 
+        $file->channels()->sync($request->channels);
+
         return back();
     }
 
@@ -219,12 +221,14 @@ class FilesController extends Controller
         abort_if(Gate::denies('file_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $series = DB::table('series')->pluck('id', 'name');
+
+        $channels = Channel::pluck('name', 'id');
         
         $files = File::with(['series'])->get();
 
-        $file->load('segments');
+        $file->load(['segments', 'channels']);
         
-        return view('admin.files.edit', compact('file', 'files', 'series'));
+        return view('admin.files.edit', compact('file', 'files', 'series', 'channels'));
     }
 
     public function update(UpdateFileRequest $request, File $file)
@@ -251,7 +255,10 @@ class FilesController extends Controller
             $file->segments()->detach();
 
             $file->update($request->all());
+            
         }
+
+        $file->channels()->sync($request->input('channels', []));
 
         return redirect()->route('admin.files.index')->withSuccessMessage('File ID update successfully!');
     }
@@ -260,11 +267,6 @@ class FilesController extends Controller
     public function show(File $file)
     {
         abort_if(Gate::denies('file_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $channels = array_map(function($value){
-            return File::CHANNEL_SELECT[$value];
-        }, $file->channels);
-        $channel = implode(", ", $channels);
 
         $types = array_map(function($value){
             return File::TYPE_SELECT[$value];
@@ -276,7 +278,7 @@ class FilesController extends Controller
         }, $file->genres);
         $genre = implode(", ", $genres);
 
-        return view('admin.files.show', compact('file', 'channel', 'genre', 'type'));
+        return view('admin.files.show', compact('file', 'genre', 'type'));
     }
 
     public function destroy(File $file)

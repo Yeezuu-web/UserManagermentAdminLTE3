@@ -50,8 +50,8 @@
                     <label class="required" for="channels">{{ trans('cruds.file.fields.channel') }}</label>
                     <div class="select2-purple">
                         <select class="form-control form-control-sm select2" name="channels[]" id="channels" multiple>
-                            @foreach(App\Models\File::CHANNEL_SELECT as $key => $label)
-                                <option value="{{ $key }}" {{ (in_array($key, old('channels', [])) || in_array($key, $file->channels ? old('channels', $file->channels) : old('channels', []))) ? 'selected' : '' }}>{{ $label }}</option>
+                            @foreach($channels as $id => $channel)
+                                <option value="{{ $id }}" {{ (in_array($id, old('channels', [])) || $file->channels->contains($id)) ? 'selected' : '' }}>{{ $channel }}</option>
                             @endforeach
                         </select>
                         <span class="invalid-feedback" id="channels_error">

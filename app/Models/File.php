@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use App\Models\Day;
 use App\Models\User;
 use \DateTimeInterface;
+use App\Models\Channel;
 use App\Models\Segment;
 use App\Models\Schedule;
 use Illuminate\Database\Eloquent\Model;
@@ -17,10 +19,6 @@ class File extends Model
     use SoftDeletes;
     use HasFactory;
     use Notifiable;
-
-    public const CHANNEL_SELECT = [
-        '1' => 'CTN', '2' => 'MYTV', '3' => 'CNC', '4' => 'DIGITAL'
-    ];
 
     public const TYPE_SELECT = [
         'FTA' => 'FTA (Free-To-Air)', 'OTT' => 'OTT (Over-The-Top)', 'DIGITAL' => 'DIGITAL'
@@ -102,14 +100,12 @@ class File extends Model
     ];
 
     protected $casts = [
-        'channels' => 'array',
         'types' => 'array',
         'genres' => 'array'
     ];
 
     protected $fillable = [
         'title_of_content',
-        'channels',
         'segment',
         'episode',
         'file_extension',
@@ -197,19 +193,33 @@ class File extends Model
         return $date->format('d-m-Y H:i:s');
     }
 
-    public function series(){
+    public function series()
+    {
         return $this->beLongsTo(Series::class, 'series_id');
     }
 
-    public function user(){
+    public function user()
+    {
         return $this->beLongsTo(User::class, 'user_id');
     }
     
-    public function segments(){
-        return $this->beLongsToMany(Segment::class, 'file_segment_pivot', 'file_id', 'segment_id')
+    public function segments()
+    {
+        return $this->belongsToMany(Segment::class, 'file_segment_pivot', 'file_id', 'segment_id')
         ->withPivot(['som', 'eom']);
     }
 
+    public function channels()
+    {
+        return $this->belongsToMany(Channel::class, 'channel_file', 'file_id', 'channel_id')->withTimestamps();
+    }
+
+    public function days()
+    {
+        return $this->beLongsToMany(Day::class)
+        ->withTimestamps()
+        ->withPivot(['position_order']);
+    }
 
     public static function boot(){
         parent::boot();

@@ -44,7 +44,9 @@
                             {{ trans('cruds.file.fields.channel') }}
                         </th>
                         <td>
-                            {{ $channel }}
+                            @foreach ($file->channels as $channel)
+                                <span class="badge badge-info badge-many">{{ $channel->name }}</span>
+                            @endforeach
                         </td>
                     </tr>
                     <tr>
