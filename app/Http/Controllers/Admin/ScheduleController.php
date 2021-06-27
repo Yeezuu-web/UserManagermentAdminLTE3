@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MassImportRequest;
 use Yajra\DataTables\Facades\DataTables;
+use App\Http\Requests\StoreScheduleRequest;
 use Symfony\Component\HttpFoundation\Response;
 
 class ScheduleController extends Controller
@@ -48,8 +49,24 @@ class ScheduleController extends Controller
                 return $row->schedule_due ? $row->schedule_due : '';
             });
 
+            $table->editColumn('fileId', function ($row) {
+                return $row->file->fileId ? $row->file->fileId : '';
+            });
+
+            $table->editColumn('title', function ($row) {
+                return $row->file->title_of_content ? $row->file->title_of_content : '';
+            });
+
+            $table->editColumn('duration', function ($row) {
+                return $row->file->duration ? $row->file->duration : '';
+            });
+            
             $table->editColumn('remark', function ($row) {
                 return $row->remark ? $row->remark : '';
+            });
+
+            $table->editColumn('position', function ($row) {
+                return $row->position ? $row->position : '';
             });
 
             $table->rawColumns(['actions', 'placeholder', 'schedule']);
@@ -57,18 +74,24 @@ class ScheduleController extends Controller
             return $table->make(true);
         }
 
-        return view('admin.schedules.index');
+        $files = File::all();
+
+        return view('admin.schedules.index', compact('files'));
     }
 
     public function create()
     {
-        $products = File::all();
-        return view('admin.schedules.create', compact('products'));
+        
+        return view('admin.schedules.create');
     }
 
-    public function store()
+    public function store(StoreScheduleRequest $request)
     {
+        $schedule = $request->all();
 
+        Schedule::create($schedule);
+
+        return response()->json($schedule ,200);
     }
 
     public function edit(Schedule $schedule)

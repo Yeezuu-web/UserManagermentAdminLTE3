@@ -17,7 +17,7 @@ class Schedule extends Model
     protected $table = "schedules";
 
     protected $fillable = [
-        'schedule_due', 'remark'
+        'file_id', 'schedule_due', 'remark', 'position'
     ];
 
     protected $dates = [
@@ -32,18 +32,13 @@ class Schedule extends Model
         return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
     }
 
-    public function setScheduleDueAttribute($value)
-    {
-        $this->attributes['schedule_due'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
-    }
-
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('d-m-Y H:i:s');
     }
 
-    public function files()
+    public function file()
     {
-        return $this->beLongsToMany(File::class, 'file_schedule', 'file_id', 'schedule_id')->withPivot('position');
+        return $this->beLongsTo(File::class);
     }
 }

@@ -216,7 +216,7 @@ class File extends Model
 
     public function schedules()
     {
-        return $this->beLongsToMany(Schedule::class, 'file_schedule', 'file_id', 'schedule_id')->withPivot('position');
+        return $this->hasMany(Schedule::class);
     }
     
     public static function boot(){
