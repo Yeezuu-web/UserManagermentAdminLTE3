@@ -15,12 +15,13 @@ class ScheduleObserver
     public function creating(Schedule $schedule)
     {
         if (is_null($schedule->position)) {
-            $schedule->position = Schedule::where('schedule_due', $schedule->schedule_due)->max('position') + 1;
+            $schedule->position = Schedule::whereDate('schedule_due', '=', $schedule->schedule_due)->max('position') + 1;
+            // dd($schedule->position);
             return;
         }
 
         $lowerPrioritySchedules = Schedule::where('position', '>=', $schedule->position)
-            ->where('schedule_due', '=', $schedule->schedule_due)
+            ->whereDate('schedule_due', '=', $schedule->schedule_due)
             ->get();
 
         foreach ($lowerPrioritySchedules as $lowerPrioritySchedule) {
@@ -36,7 +37,7 @@ class ScheduleObserver
         }
 
         if (is_null($schedule->position)) {
-            $schedule->position = Schedule::where('schedule_due', '=', $schedule->schedule_due)->max('position');
+            $schedule->position = Schedule::whereDate('schedule_due', '=', $schedule->schedule_due)->max('position');
         }
 
         if ($schedule->getOriginal('position') > $schedule->position) {
@@ -49,7 +50,7 @@ class ScheduleObserver
             ];
         }
 
-        $lowerPrioritySchedules = Schedule::where('schedule_due', '=', $schedule->schedule_due)
+        $lowerPrioritySchedules = Schedule::whereDate('schedule_due', '=', $schedule->schedule_due)
             ->whereBetween('position', $positionRange)
             ->where('id', '!=', $schedule->id)
             ->get();
@@ -66,7 +67,7 @@ class ScheduleObserver
 
     public function deleted(Schedule $schedule)
     {
-        $lowerPrioritySchedules = Schedule::where('schedule_due', '=', $schedule->schedule_due)
+        $lowerPrioritySchedules = Schedule::whereDate('schedule_due', '=', $schedule->schedule_due)
             ->where('position', '>', $schedule->position)
             ->get();
 

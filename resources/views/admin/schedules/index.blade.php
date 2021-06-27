@@ -64,7 +64,7 @@
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label for="schedule_due" class="required">Schedule Due</label>
-                            <input type="text" name="schedule_due" id="schedule_due" class="form-control form-control-sm date" />
+                            <input type="text" name="schedule_due" id="schedule_due" class="form-control form-control-sm dateYMD" />
                             <span class="invalid-feedback"></span>
                         </div>
                         <div class="form-group col-md-12">

@@ -18,7 +18,7 @@ class ScheduleController extends Controller
     public function index(Request $request)
     {
         abort_if(Gate::denies('schedule_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
+        
         if ($request->ajax()) {
             $query = Schedule::all();
             $table = Datatables::of($query);

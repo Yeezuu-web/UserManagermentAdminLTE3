@@ -29,7 +29,7 @@ class Schedule extends Model
 
     public function getScheduleDueAttribute($value)
     {
-        return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
+        return $value ? Carbon::parse($value)->format(config('panel.date_format_ydm')) : null;
     }
 
     protected function serializeDate(DateTimeInterface $date)
@@ -41,4 +41,70 @@ class Schedule extends Model
     {
         return $this->beLongsTo(File::class);
     }
+
+    // public static function boot(){
+    //     parent::boot();
+
+    //     static::creating(function($schedule) {
+    //         if (is_null($schedule->position)) {
+    //             $schedule->position = Schedule::whereDate('schedule_due', '=', $schedule->schedule_due)->max('position') + 1;
+    //             // dd($schedule->position);
+    //             return;
+    //         }
+    
+    //         $lowerPrioritySchedules = Schedule::where('position', '>=', $schedule->position)
+    //             ->whereDate('schedule_due', '=', $schedule->schedule_due)
+    //             ->get();
+    
+    //         foreach ($lowerPrioritySchedules as $lowerPrioritySchedule) {
+    //             $lowerPrioritySchedule->position++;
+    //             $lowerPrioritySchedule->saveQuietly();
+    //         }
+    //     });
+        
+    //     static::updating(function($schedule) {
+    //         if ($schedule->isClean('position')) {
+    //             return;
+    //         }
+    
+    //         if (is_null($schedule->position)) {
+    //             $schedule->position = Schedule::whereDate('schedule_due', '=', $schedule->schedule_due)->max('position');
+    //         }
+    
+    //         if ($schedule->getOriginal('position') > $schedule->position) {
+    //             $positionRange = [
+    //                 $schedule->position, $schedule->getOriginal('position')
+    //             ];
+    //         } else {
+    //             $positionRange = [
+    //                 $schedule->getOriginal('position'), $schedule->position
+    //             ];
+    //         }
+    
+    //         $lowerPrioritySchedules = Schedule::whereDate('schedule_due', '=', $schedule->schedule_due)
+    //             ->whereBetween('position', $positionRange)
+    //             ->where('id', '!=', $schedule->id)
+    //             ->get();
+    
+    //         foreach ($lowerPrioritySchedules as $lowerPrioritySchedule) {
+    //             if ($schedule->getOriginal('position') < $schedule->position) {
+    //                 $lowerPrioritySchedule->position--;
+    //             } else {
+    //                 $lowerPrioritySchedule->position++;
+    //             }
+    //             $lowerPrioritySchedule->saveQuietly();
+    //         }
+    //     });
+
+    //     static::deleting(function($schedule){
+    //         $lowerPrioritySchedules = Schedule::whereDate('schedule_due', '=', $schedule->schedule_due)
+    //         ->where('position', '>', $schedule->position)
+    //         ->get();
+
+    //         foreach ($lowerPrioritySchedules as $lowerPrioritySchedule) {
+    //             $lowerPrioritySchedule->position--;
+    //             $lowerPrioritySchedule->saveQuietly();
+    //         }
+    //     });
+    // }
 }
