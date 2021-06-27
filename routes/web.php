@@ -56,13 +56,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     Route::post('series/update/{id}', [FilesController::class, 'seriesUpdate'])->name('files.series.update');
 
     //schedules
-    Route::post('schedules/import', [ScheduleController::class, 'massImport'])->name('schedules.massImport');
-    Route::post('schedules/reorder', [ScheduleController::class, 'reorder'])->name('schedules.reorder');
-    Route::post('schedules/import/{file}', [ScheduleController::class, 'import'])->name('schedules.import');
-    Route::get('schedules/builder', [ScheduleController::class, 'builder'])->name('schedules.builder');
-    Route::get('schedules/getBuilder', [ScheduleController::class, 'getBuilder'])->name('schedules.getBuilder');
-    Route::get('schedules/list', [ScheduleController::class, 'list'])->name('schedules.list');
-    Route::resource('schedules', ScheduleController::class)->except(['create', 'show']);
+    Route::delete('schedule/destroy', [ScheduleController::class, 'massDestroy'])->name('schedules.massDestroy');
+    Route::resource('schedules', ScheduleController::class);
     
     Route::get('test', [FilesController::class, 'test']);
 });
@@ -211,6 +206,6 @@ Route::get('test', function() {
     
     // $result = ArrayToXml::convert($array, 'playlist');
     $result = ArrayToXml::convert($array, [], true, 'UTF-8', '1.1', [], true);
-    // dd($result);
-    return $result;
+    dd($result);
+    // return $result;
 });

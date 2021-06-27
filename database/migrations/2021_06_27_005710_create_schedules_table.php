@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddScheduleOnToDayFilePivotTable extends Migration
+class CreateSchedulesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,12 @@ class AddScheduleOnToDayFilePivotTable extends Migration
      */
     public function up()
     {
-        Schema::table('day_file', function (Blueprint $table) {
-            $table->date('schedule_on')->after('file_id')->nullable();
+        Schema::create('schedules', function (Blueprint $table) {
+            $table->id();
+            $table->date('schedule_due');
+            $table->string('remark');
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -25,8 +29,6 @@ class AddScheduleOnToDayFilePivotTable extends Migration
      */
     public function down()
     {
-        Schema::table('day_file_pivot', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('schedules');
     }
 }

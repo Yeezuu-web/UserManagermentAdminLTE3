@@ -1,7 +1,7 @@
 <div class="card col-md-12">
     <div class="card-header">Segment</div>
     <div class="card-body">
-        <table class="table" id="products_table">
+        <table class="table" id="segments_table">
             <thead>
             <tr>
                 <th>Break</th>

@@ -453,6 +453,7 @@
     @include('sweetalert::alert')
     @livewireScripts
     @yield('scripts')
+    @stack('scripts')
 </body>
 
 </html>

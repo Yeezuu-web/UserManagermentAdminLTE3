@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDayFilePivotTable extends Migration
+class CreateFileSchedulePivotTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateDayFilePivotTable extends Migration
      */
     public function up()
     {
-        Schema::create('day_file', function (Blueprint $table) {
+        Schema::create('file_schedule', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('day_id');
-            $table->foreign('day_id', 'day_id_fk_4110361')->references('id')->on('days')->onDelete('cascade');
             $table->unsignedBigInteger('file_id');
             $table->foreign('file_id', 'file_id_fk_4110361')->references('id')->on('files')->onDelete('cascade');
-            $table->integer('position_order');
+            $table->unsignedBigInteger('schedule_id');
+            $table->foreign('schedule_id', 'schedule_id_fk_4110361')->references('id')->on('schedules')->onDelete('cascade');
+            $table->integer('position');
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ class CreateDayFilePivotTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('day_file_pivot');
+        Schema::dropIfExists('file_schedule_pivot');
     }
 }

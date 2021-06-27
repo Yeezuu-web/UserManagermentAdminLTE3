@@ -214,13 +214,11 @@ class File extends Model
         return $this->belongsToMany(Channel::class, 'channel_file', 'file_id', 'channel_id')->withTimestamps();
     }
 
-    public function days()
+    public function schedules()
     {
-        return $this->beLongsToMany(Day::class)
-        ->withTimestamps()
-        ->withPivot(['position_order']);
+        return $this->beLongsToMany(Schedule::class, 'file_schedule', 'file_id', 'schedule_id')->withPivot('position');
     }
-
+    
     public static function boot(){
         parent::boot();
 

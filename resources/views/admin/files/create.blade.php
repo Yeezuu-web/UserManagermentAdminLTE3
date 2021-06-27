@@ -27,7 +27,7 @@
                 <div class="form-group col-md-3">
                     <label class="required" for="series_id"
                         >{{ trans('cruds.file.fields.type_of_content') }}</label>
-                    <select name="series_id" id="series_id" class="form-control form-control-sm @error('series_id') is-invalid @enderror">
+                    <select name="series_id" id="series_id" class="form-control form-control-sm select2 @error('series_id') is-invalid @enderror">
                         <option value="">Please select</option>
                         @foreach ($series as $value => $key)
                             <option value="{{ $key }}" {{ old('series_id', '') === (string) $key ? 'selected' : '' }}>{{ $value }}</option>
