@@ -32,7 +32,7 @@ class ScheduleController extends Controller
                 $deleteGate = 'schedule_delete';
                 $crudRoutePart = 'schedules';
 
-                return view('partials.datatablesActions', compact(
+                return view('partials.datatablesActionJS', compact(
                     'viewGate',
                     'editGate',
                     'deleteGate',
@@ -76,7 +76,10 @@ class ScheduleController extends Controller
 
         $files = File::all();
 
-        return view('admin.schedules.index', compact('files'));
+        $schedules = Schedule::orderBy('position', 'asc')
+            ->get();
+
+        return view('admin.schedules.index', compact('files', 'schedules'));
     }
 
     public function create()
@@ -94,14 +97,19 @@ class ScheduleController extends Controller
         return response()->json($schedule ,200);
     }
 
-    public function edit(Schedule $schedule)
+    public function edit($id)
     {
-
+        $schedule = Schedule::findOrfail($id);
+        return response()->json($schedule);
     }
 
-    public function update()
+    public function update(Request $request, $id)
     {
+        $schedule = Schedule::findOrfail($id);
 
+        $schedule->update($request->all());
+
+        return response('Update Successfully.', 200);
     }
 
     public function destroy()
@@ -112,6 +120,35 @@ class ScheduleController extends Controller
     public function massDestroy()
     {
 
+    }
+
+    public function reorder(Request $request)
+    {
+        $schedules = Schedule::whereDate('schedule_due', '=', $request->date)->get(); 
+
+        foreach ($schedules as $schedule) {
+            foreach ($request->order as $order) {
+                if($order['id'] == $schedule->id){
+                    $schedule->position = $order['position'];
+                }
+            }
+            $schedule->saveQuietly();
+        }
+        return response()->json('done');
+    }
+
+    public function builder()
+    {
+        return view('admin.schedules.builder.index');
+    }
+
+    public function sort(Request $request)
+    {
+        $schedules = Schedule::with('file')->whereDate('schedule_due', '=', $request->schedule_due)->get(); 
+
+        $files = File::all();
+
+        return view('admin.schedules.builder.sort', compact('schedules', 'files'));
     }
     
 }

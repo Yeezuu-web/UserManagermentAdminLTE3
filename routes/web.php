@@ -57,6 +57,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
 
     //schedules
     Route::delete('schedule/destroy', [ScheduleController::class, 'massDestroy'])->name('schedules.massDestroy');
+    Route::post('schedules/reorder', [ScheduleController::class, 'reorder'])->name('schedules.reorder');
+    Route::get('schedules/builder', [ScheduleController::class, 'builder'])->name('schedules.builder.index');
+    Route::get('schedules/builder/sort', [ScheduleController::class, 'sort'])->name('schedules.builder.sort');
     Route::resource('schedules', ScheduleController::class);
     
     Route::get('test', [FilesController::class, 'test']);

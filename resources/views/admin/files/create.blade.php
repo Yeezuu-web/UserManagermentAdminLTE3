@@ -62,7 +62,7 @@
 
                 <div class="form-group col-md-3" id="segments">
                     <label for="segment">{{ trans('cruds.file.fields.segment') }}</label>
-                    <input class="form-control form-control-sm" type="number" name="segment" id="segment">
+                    <input class="form-control form-control-sm" type="number" name="segment" id="segment" min="0">
                     <span class="invalid-feedback" id="segment_error">
                     </span>
                 </div>
@@ -80,7 +80,7 @@
                 
                 <div class="form-group col-md-3">
                     <label for="episode">{{ trans('cruds.file.fields.episode') }}</label>
-                    <input type="number" name="episode" id="episode" class="form-control form-control-sm" />
+                    <input type="number" name="episode" id="episode" class="form-control form-control-sm" min="0"/>
                 </div>
 
                 <div class="form-group col-md-3">
@@ -124,7 +124,7 @@
                                 <option value="{{ $key }}" {{ old('size_type', '') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
                         </select>
-                        <input type="number"name="file_size" id="file_size" class="form-control form-control-sm col-md-9" />
+                        <input type="number"name="file_size" id="file_size" class="form-control form-control-sm col-md-9" min="0"/>
                     </div>
                 </div>
 

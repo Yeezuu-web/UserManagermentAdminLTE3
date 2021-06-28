@@ -65,7 +65,7 @@
                 </li>
                     @can('schedule_create')
                     <li class="nav-item">
-                        <a class="nav-link" href="#"  style="padding-left: 2rem;font-size: .85rem;">
+                        <a class="nav-link" href="{{ route("admin.schedules.builder.index") }}"  style="padding-left: 2rem;font-size: .85rem;">
                             <i class="fas fa-fw fa-calendar nav-icon" style="font-size: .85rem;">
                             </i>
                             <p>
