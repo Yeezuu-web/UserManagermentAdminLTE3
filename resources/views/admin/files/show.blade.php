@@ -16,7 +16,7 @@
             <table class="table table-bordered table-striped">
                 <tbody>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.id') }}
                         </th>
                         <td>
@@ -24,15 +24,15 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.content_id') }}
                         </th>
                         <td>
-                            {{ $file->content_id }}
+                            {{ $file->fileId }}
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.title_of_content') }}
                         </th>
                         <td>
@@ -40,7 +40,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.channel') }}
                         </th>
                         <td>
@@ -50,7 +50,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.segment') }}
                         </th>
                         <td>
@@ -58,7 +58,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.episode') }}
                         </th>
                         <td>
@@ -66,7 +66,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.file_extension') }}
                         </th>
                         <td>
@@ -74,7 +74,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.duration') }}
                         </th>
                         <td>
@@ -82,7 +82,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.resolution') }}
                         </th>
                         <td>
@@ -90,7 +90,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.file_size') }}
                         </th>
                         <td>
@@ -98,7 +98,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.path') }}
                         </th>
                         <td>
@@ -106,7 +106,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.storage') }}
                         </th>
                         <td>
@@ -114,7 +114,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.date_received') }}
                         </th>
                         <td>
@@ -122,7 +122,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.air_date') }}
                         </th>
                         <td>
@@ -130,7 +130,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.year') }}
                         </th>
                         <td>
@@ -138,7 +138,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.period_of_time') }}
                         </th>
                         <td>
@@ -146,7 +146,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.start_date') }}
                         </th>
                         <td>
@@ -154,7 +154,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.end_date') }}
                         </th>
                         <td>
@@ -162,7 +162,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.type') }}
                         </th>
                         <td>
@@ -170,7 +170,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.territory') }}
                         </th>
                         <td>
@@ -178,7 +178,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.genres') }}
                         </th>
                         <td>
@@ -202,7 +202,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.khmer_dub') }}
                         </th>
                         <td>
@@ -218,7 +218,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.poster') }}
                         </th>
                         <td>
@@ -235,7 +235,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.trailer_promo') }}
                         </th>
                         <td>
@@ -251,7 +251,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.synopsis') }}
                         </th>
                         <td>
@@ -259,7 +259,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.remark') }}
                         </th>
                         <td>
@@ -267,7 +267,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <th width="350">
                             {{ trans('cruds.file.fields.file_available') }}
                         </th>
                         <td>

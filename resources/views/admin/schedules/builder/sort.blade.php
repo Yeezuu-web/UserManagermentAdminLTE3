@@ -13,81 +13,73 @@
                 </div>
             </form>
 
-            <div class="mt-4 row">
-                <div class="table-responsive col-md-12">
-                    <table class=" table table-bordered table-striped table-hover datatable datatable-Filter">
-                        <thead>
-                            <tr>
-                                <th width="10">
-                                    
-                                </th>
-                                <th width="30">
-                                    ID
-                                </th>
-                                <th>
-                                    SCHEDULE DUE
-                                </th>
-                                <th>
-                                    FILE ID
-                                </th>
-                                <th>
-                                    TITLE
-                                </th>
-                                <th>
-                                    DURATION
-                                </th>
-                                <th>
-                                    REMARK
-                                </th>
-                                <th>
-                                    POSITION
-                                </th>
-                                <th>
-                                    {{-- ACTION --}}
-                                    &nbsp;
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablecontents">
-                            @foreach ($schedules as $index => $schedule)
-                            <input type="text" name="date" id="date{{$index}}" value="{{$schedule->schedule_due}}" hidden>
-                            <tr class="row1"  data-id="{{ $schedule->position }}">
-                        {{-- <tbody> --}}
-                            {{-- <tr> --}}
-                                <td>
-                                    
-                                </td>
-                                <td>
-                                    {{$schedule->id}}
-                                </td>
-                                <td>
-                                    {{$schedule->schedule_due}}
-                                </td>
-                                <td>
-                                    {{$schedule->file->fileId}}
-                                </td>
-                                <td>
-                                    {{$schedule->file->title_of_content}}
-                                </td>
-                                <td>
-                                    {{$schedule->file->duration}}
-                                </td>
-                                <td>
-                                    {{$schedule->remark}}
-                                </td>
-                                <td>
-                                    {{$schedule->position}}
-                                </td>
-                                <td>
-                                    <button class="btn btn-xs btn-success">View</button>
-                                    <button class="btn btn-xs btn-primary" onclick="editModal({{$schedule->id}})">Edit</button>
-                                    <button class="btn btn-xs btn-danger">Delete</button>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+            <div class="table-responsive">
+                <table class=" table table-bordered table-striped table-hover datatable datatable-Filter">
+                    <thead>
+                        <tr>
+                            <th width="30">
+                                ID
+                            </th>
+                            <th>
+                                SCHEDULE DUE
+                            </th>
+                            <th>
+                                FILE ID
+                            </th>
+                            <th>
+                                TITLE
+                            </th>
+                            <th>
+                                DURATION
+                            </th>
+                            <th>
+                                REMARK
+                            </th>
+                            <th>
+                                POSITION
+                            </th>
+                            <th>
+                                {{-- ACTION --}}
+                                &nbsp;
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablecontents">
+                        @foreach ($schedules as $index => $schedule)
+                        <input type="text" name="date" id="date{{$index}}" value="{{$schedule->schedule_due}}" hidden>
+                        <tr class="row1"  data-id="{{ $schedule->position }}">
+                    {{-- <tbody> --}}
+                        {{-- <tr> --}}
+                            <td>
+                                {{$schedule->id}}
+                            </td>
+                            <td>
+                                {{$schedule->schedule_due}}
+                            </td>
+                            <td>
+                                {{$schedule->file->fileId}}
+                            </td>
+                            <td>
+                                {{$schedule->file->title_of_content}}
+                            </td>
+                            <td>
+                                {{$schedule->file->duration}}
+                            </td>
+                            <td>
+                                {{$schedule->remark}}
+                            </td>
+                            <td>
+                                {{$schedule->position}}
+                            </td>
+                            <td class="d-flex justify-content-around">
+                                <button class="btn btn-xs btn-success">View</button>
+                                <button class="btn btn-xs btn-primary" onclick="editModal({{$schedule->id}})">Edit</button>
+                                <button class="btn btn-xs btn-danger">Delete</button>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -158,19 +150,6 @@
       $.extend(true, $.fn.dataTable.defaults, {
         language: {
           url: languages['{{ app()->getLocale() }}']
-        },
-        columnDefs: [{
-            orderable: false,
-            className: 'select-checkbox',
-            targets: 0
-        }, {
-            orderable: false,
-            searchable: false,
-            targets: -1
-        }],
-        select: {
-          style:    'multi+shift',
-          selector: 'td:first-child'
         },
         order: [],
         scrollX: true,
@@ -284,7 +263,8 @@
     @endcan
     $.extend(true, $.fn.dataTable.defaults, {
         order: [[ 7, 'asc' ]],
-        pageLength: 100,
+        select: false,
+        pageLength: 50,
     });
     $('.datatable-Filter:not(.ajaxTable)').DataTable({ buttons: dtButtons })
         $('a[data-toggle="tab"]').on('shown.bs.tab', function(e){

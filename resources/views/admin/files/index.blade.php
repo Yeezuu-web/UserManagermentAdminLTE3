@@ -194,7 +194,7 @@ body{
         },
         order: [],
         scrollX: true,
-        pageLength: 10,
+        pageLength: 25,
         dom: 'lBfrtip<"actions">',
         buttons: [
           {
@@ -317,7 +317,7 @@ body{
         },
         order: [],
         scrollX: true,
-        pageLength: 10,
+        pageLength: 25,
         dom: 'lBfrtip<"actions">',
         buttons: [
           {
@@ -430,7 +430,7 @@ body{
             ],
             orderCellsTop: true,
             order: [[ 1, 'desc' ]],
-            pageLength: 10,
+            pageLength: 25,
         };
 
         let table = $('.datatable-File').DataTable(dtOverrideGlobals);

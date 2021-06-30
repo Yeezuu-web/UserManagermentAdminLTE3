@@ -10,7 +10,8 @@
 
     <title>{{ trans('panel.site_title') }}</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet" />
-    
+    <link rel="icon" href="https://cbscambodia.com.kh/img/digital-logopng.png">
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css" rel="stylesheet" />
     <link
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css"
@@ -30,7 +31,7 @@
     @yield('styles')
 </head>
 
-<body class="sidebar-mini layout-fixed" style="height: auto;">
+<body class="sidebar-mini layout-fixed sidebar-collapse" style="height: auto;">
     <div class="wrapper">
         <nav class="main-header navbar navbar-expand bg-white navbar-light border-bottom">
             <!-- Left navbar links -->

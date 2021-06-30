@@ -234,6 +234,7 @@ class FilesController extends Controller
     public function update(UpdateFileRequest $request, File $file)
     {
         //calculate duration if have break
+        // dd($request->all());
         if($request->duration == NULL && $request->breaks != NULL && $request->seg_break == 1){
             foreach ($request->breaks as $index => $break){
                 $diff[$index] = Carbon::parse($request->breaks[$index]['som'])->diff(Carbon::parse($request->breaks[$index]['eom']))->format('%H:%I:%S');
@@ -270,12 +271,12 @@ class FilesController extends Controller
 
         $types = array_map(function($value){
             return File::TYPE_SELECT[$value];
-        }, $file->types);
+        }, $file->types ? $file->types : []);
         $type = implode(", ", $types);
 
         $genres = array_map(function($value){
             return File::GENRE_SELECT[$value];
-        }, $file->genres);
+        }, $file->genres ? $file->genres : []);
         $genre = implode(", ", $genres);
 
         return view('admin.files.show', compact('file', 'genre', 'type'));

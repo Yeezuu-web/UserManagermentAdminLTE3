@@ -218,6 +218,7 @@
                 <div class="form-group col-md-3">
                     <label for="types">{{ trans('cruds.file.fields.type') }}</label>
                     <div class="select2-purple">
+                        <input type="text" class="form-control form-control-sm" name="types" id="types" value="" hidden/>
                         <select class="form-control form-control-sm select2" name="types[]" id="types" multiple>
                             @foreach(App\Models\File::TYPE_SELECT as $key => $label)
                                 <option value="{{ $key }}" {{ (in_array($key, old('types', [])) || in_array($key, $file->types ? old('types', $file->types) : old('types', []))) ? 'selected' : '' }}>{{ $label }}</option>
@@ -239,6 +240,7 @@
                 <div class="form-group col-md-3">
                     <label for="genres">{{ trans('cruds.file.fields.genres') }}</label>
                     <div class="select2-purple" width="1.8rem">
+                        <input type="text" class="form-control form-control-sm" name="genres" id="genres" value="" hidden/>
                         <select class="form-control form-control-sm select2" name="genres[]" id="genres" multiple>
                             @foreach(App\Models\File::GENRE_SELECT as $key => $label)
                                 <option value="{{ $key }}" {{ (in_array($key, old('genres', [])) || in_array($key, $file->genres ? old('genres', $file->genres) : old('genres', []))) ? 'selected' : '' }}>{{ $label }}</option>

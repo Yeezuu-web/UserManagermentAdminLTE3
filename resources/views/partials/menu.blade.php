@@ -1,6 +1,7 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4" style="min-height: 917px;">
     <!-- Brand Logo -->
-    <a href="#" class="brand-link">
+    <a href="index3.html" class="brand-link">
+        <img src="https://cbscambodia.com.kh/img/digital-logopng.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">{{ trans('panel.site_title') }}</span>
     </a>
 
@@ -32,8 +33,8 @@
                 </li>
                     @can('file_import')
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route("admin.files.view") }}"  style="padding-left: 2rem;font-size: .85rem;">
-                            <i class="fas fa-fw fa-upload nav-icon" style="font-size: .85rem;">
+                        <a class="nav-link" href="{{ route("admin.files.view") }}">
+                            <i class="fas fa-fw fa-upload nav-icon">
                             </i>
                             <p>
                                 Import
@@ -43,8 +44,8 @@
                     @endcan
                     @can('series_access')
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route("admin.files.series") }}"  style="padding-left: 2rem;font-size: .85rem;">
-                            <i class="fas fa-fw fa-list nav-icon" style="font-size: .85rem;">
+                        <a class="nav-link" href="{{ route("admin.files.series") }}">
+                            <i class="fas fa-fw fa-list nav-icon">
                             </i>
                             <p>
                                 Type & Series
